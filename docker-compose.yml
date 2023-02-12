@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   dreamchip.animaltracking.webapi:
-    container_name: animaltracking.webapi
+    container_name: dreamchip.animaltracking.webapi
     image: ${DOCKER_REGISTRY-}dreamchipanimaltrackingwebapi
     build:
       context: .
