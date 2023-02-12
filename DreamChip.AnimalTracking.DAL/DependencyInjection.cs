@@ -1,7 +1,9 @@
-﻿using System.Reflection;
-using FluentMigrator.Runner;
+﻿using FluentMigrator.Runner;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using DreamChip.AnimalTracking.Application.Abstractions.Repositories;
+using DreamChip.AnimalTracking.DAL.Repositories;
 
 namespace DreamChip.AnimalTracking.DAL;
 
@@ -20,6 +22,8 @@ public static class DependencyInjection
                     .For
                     .All();
             });
+
+        services.AddScoped<IAccountRepository, AccountRepository>();
 
         return services;
     }
