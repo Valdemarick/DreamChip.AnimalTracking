@@ -10,11 +10,8 @@ public sealed class AnimalType : BaseEntity<long>
     /// <summary>
     /// Constructor.
     /// </summary>
-    /// <param name="type">Type name.</param>
-    public AnimalType(string type)
+    public AnimalType()
     {
-        Type = type;
-
         Animals = new List<Animal>();
     }
 

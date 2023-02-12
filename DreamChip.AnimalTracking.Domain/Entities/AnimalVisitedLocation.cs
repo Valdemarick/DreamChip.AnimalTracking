@@ -2,8 +2,14 @@
 
 namespace DreamChip.AnimalTracking.Domain.Entities;
 
+/// <summary>
+/// Relationship between Animal and Location Point.
+/// </summary>
 public sealed class AnimalVisitedLocation : BaseEntity<long>
 {
+    /// <summary>
+    /// Constructor.
+    /// </summary>
     public AnimalVisitedLocation()
     {
         

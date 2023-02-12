@@ -10,20 +10,8 @@ public sealed class Account : BaseEntity<int>
     /// <summary>
     /// Constructor.
     /// </summary>
-    /// <param name="firstName">First Name.</param>
-    /// <param name="lastName">Last Name.</param>
-    /// <param name="email">Email.</param>
-    /// <param name="password">Password.</param>
-    public Account(string firstName,
-        string lastName, 
-        string email,
-        string password)
+    public Account()
     {
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Password = password;
-
         Animals = new List<Animal>();
     }
 

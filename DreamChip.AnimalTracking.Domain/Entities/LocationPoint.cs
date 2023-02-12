@@ -8,12 +8,9 @@ public sealed class LocationPoint : BaseEntity<long>
     /// <summary>
     /// Constructor.
     /// </summary>
-    /// <param name="latitude">Latitude.</param>
-    /// <param name="longitude">Longitude.</param>
-    public LocationPoint(double latitude, double longitude)
+    public LocationPoint()
     {
-        Latitude = latitude;
-        Longitude = longitude;
+        AnimalVisitedLocations = new List<AnimalVisitedLocation>();
     }
 
     /// <summary>
@@ -25,4 +22,9 @@ public sealed class LocationPoint : BaseEntity<long>
     /// Geographic longitude in degrees.
     /// </summary>
     public required double Longitude { get; set; }
+
+    /// <summary>
+    /// Animal that were at this point.
+    /// </summary>
+    public List<AnimalVisitedLocation> AnimalVisitedLocations { get; set; }
 }

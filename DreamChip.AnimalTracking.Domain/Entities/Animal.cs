@@ -8,23 +8,12 @@ namespace DreamChip.AnimalTracking.Domain.Entities;
 /// </summary>
 public sealed class Animal : BaseEntity<long>
 {
-    public Animal(float weight, 
-        float length,
-        float height, 
-        Gender gender, 
-        int chipperId,
-        int chippingLocationId)
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    public Animal()
     {
-        Weight = weight;
-        Length = length;
-        Height = height;
-        Gender = gender;
-        ChipperId = chipperId;
-        ChippingLocationId = chippingLocationId;
-        LifeStatus = LifeStatus.Alive;
-        ChippingDateTime = DateTime.Now;
-
-        AnimalTypes= new List<AnimalType>();
+        AnimalTypes = new List<AnimalType>();
         AnimalVisitedLocations = new List<AnimalVisitedLocation>();
     }
 
