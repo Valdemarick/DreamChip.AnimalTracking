@@ -1,7 +1,8 @@
-﻿using FluentValidation;
+﻿using DreamChip.AnimalTracking.Application.Services;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using DreamChip.AnimalTracking.Application.Services;
+using FluentValidation;
 
 namespace DreamChip.AnimalTracking.Application;
 
@@ -11,7 +12,9 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+            .AddFluentValidationAutoValidation()
+            .AddFluentValidationClientsideAdapters();
 
         services.AddScoped<AccountService>();
 

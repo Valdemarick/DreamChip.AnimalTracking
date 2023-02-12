@@ -4,22 +4,22 @@ public static class Extensions
 {
     public static bool IsPasswordValid(string? password)
     {
-        return string.IsNullOrEmpty(password?.Trim());
+        return !string.IsNullOrEmpty(password?.Trim());
     }
 
     public static bool IsFirstNameValid(string? firstName)
     {
-        return string.IsNullOrEmpty(firstName?.Trim());
+        return !string.IsNullOrEmpty(firstName?.Trim());
     }
 
     public static bool IsLastNameValid(string? lastName)
     {
-        return string.IsNullOrEmpty(lastName?.Trim());
+        return !string.IsNullOrEmpty(lastName?.Trim());
     }
 
     public static bool IsEmailValid(string? email)
     {
-        return string.IsNullOrEmpty(email?.Trim());
+        return !string.IsNullOrEmpty(email?.Trim());
     }
 
 }
