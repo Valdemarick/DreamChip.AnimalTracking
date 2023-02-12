@@ -1,12 +1,14 @@
 using DreamChip.AnimalTracking.Application;
 using DreamChip.AnimalTracking.DAL;
+using DreamChip.AnimalTracking.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddDAL(builder.Configuration)
-    .AddApplication();
+    .AddApplication()
+    .AddWebApi();
 
 builder.Services.AddControllers();
 
