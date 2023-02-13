@@ -18,11 +18,7 @@ public sealed class AccountService
 
     public async Task<AccountDto> CreateAccountAsync(CreateAccountDto dto)
     {
-        var existingAccount = await _accountRepository.GetByEmail(dto.Email);
-        if (existingAccount != null)
-        {
-            return null;
-        }
+        var existingAccount = await _accountRepository.GetByEmailAsync(dto.Email);
 
         var account = _mapper.Map<Account>(dto);
 

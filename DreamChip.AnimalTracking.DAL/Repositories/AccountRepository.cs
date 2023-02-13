@@ -8,19 +8,21 @@ namespace DreamChip.AnimalTracking.DAL.Repositories;
 
 public sealed class AccountRepository : BaseRepository, IAccountRepository
 {
+    private readonly string[] _columns = { "id", "first_name", "last_name", "email", "password" };
+
     public AccountRepository(IConfiguration configuration) : base(configuration)
     {
     }
 
-    public async Task<Account?> GetByEmail(string email)
+    public async Task<Account?> GetByEmailAsync(string email)
     {
-        var sql = @"SELECT id, first_name, last_name, email, password
+        var sql = @$"SELECT {_columns}
                     FROM public.account
-                    WHERE email = @Email";
+                    WHERE email = @email";
 
         var connection = await OpenConnection();
 
-        var account = await connection.QueryFirstAsync<Account>(sql, email);
+        var account = await connection.QueryFirstOrDefaultAsync<Account>(sql, new { email });
 
         return account;
     }

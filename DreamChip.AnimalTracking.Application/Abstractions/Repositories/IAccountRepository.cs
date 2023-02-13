@@ -12,7 +12,7 @@ public interface IAccountRepository
     /// </summary>
     /// <param name="email">Input email.</param>
     /// <returns>Existing account or null.</returns>
-    Task<Account?> GetByEmail(string email);
+    Task<Account?> GetByEmailAsync(string email);
 
     /// <summary>
     /// Creates a new account.

@@ -25,7 +25,7 @@ internal sealed class AuthorizationFilter : IAsyncAuthorizationFilter
 
         var tuple = GetEmailAndPasswordFromHeader(authorizationHeader);
 
-        var user = await _accountRepository.GetByEmail(tuple.email);
+        var user = await _accountRepository.GetByEmailAsync(tuple.email);
         if (user is null)
         {
             context.Result = new StatusCodeResult(StatusCodes.Status401Unauthorized);
