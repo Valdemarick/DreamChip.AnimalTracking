@@ -2,6 +2,8 @@
 using DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 using DreamChip.AnimalTracking.Application.Dto.Account;
 using DreamChip.AnimalTracking.Domain.Entities;
+using DreamChip.AnimalTracking.Domain.Exceptions;
+using LanguageExt.Common;
 
 namespace DreamChip.AnimalTracking.Application.Services;
 
@@ -16,15 +18,23 @@ public sealed class AccountService
         _mapper = mapper;
     }
 
-    public async Task<AccountDto> CreateAccountAsync(CreateAccountDto dto)
+    public async Task<Result<AccountDto>> CreateAccountAsync(CreateAccountDto dto)
     {
         var existingAccount = await _accountRepository.GetByEmailAsync(dto.Email);
+        if (existingAccount != null)
+        {
+            var exception = new EntityAlreadyExistsException();
+
+            return new Result<AccountDto>(exception);
+        }
 
         var account = _mapper.Map<Account>(dto);
 
         var id = await _accountRepository.CreateAsync(account);
         account.Id = id;
 
-        return _mapper.Map<AccountDto>(account);
+        var accountDto = _mapper.Map<AccountDto>(account);
+
+        return new Result<AccountDto>(accountDto);
     }
 }

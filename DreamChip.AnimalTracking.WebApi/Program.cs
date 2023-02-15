@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.AddSerilog();
+
 builder.Services.AddDAL(builder.Configuration)
     .AddApplication()
     .AddWebApi();

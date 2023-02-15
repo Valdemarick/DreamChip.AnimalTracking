@@ -16,7 +16,7 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
 
     public async Task<Account?> GetByEmailAsync(string email)
     {
-        var sql = @$"SELECT {_columns}
+        var sql = @$"SELECT {string.Join(',', _columns)}
                     FROM public.account
                     WHERE email = @email";
 
