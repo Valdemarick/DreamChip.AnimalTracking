@@ -16,8 +16,8 @@ public abstract class BaseController : ControllerBase
         {
             return ex switch
             {
-                AccountAlreadyExistsException => BadRequest(),
                 AccountNotFoundException => NotFound(),
+                AccountWithTheSameEmailExistsException => Conflict(),
                 _ => Problem(statusCode: 500)
             };
         });
