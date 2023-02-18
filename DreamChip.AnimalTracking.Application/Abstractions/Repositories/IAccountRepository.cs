@@ -1,4 +1,5 @@
 ﻿using DreamChip.AnimalTracking.Domain.Entities;
+using DreamChip.AnimalTracking.Domain.ValueObjects.Account;
 
 namespace DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 
@@ -20,6 +21,13 @@ public interface IAccountRepository
     /// <param name="email">Input email.</param>
     /// <returns>Existing account or null.</returns>
     Task<Account?> GetByEmailAsync(string email);
+
+    /// <summary>
+    /// Gets page of accounts.
+    /// </summary>
+    /// /// <param name="request">Filter parameters.</param>
+    /// <returns>Account list.</returns>
+    Task<List<Account>> GetPageAsync(AccountPageRequest request);
 
     /// <summary>
     /// Creates a new account.

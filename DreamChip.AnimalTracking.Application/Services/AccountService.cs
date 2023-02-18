@@ -4,6 +4,7 @@ using DreamChip.AnimalTracking.Application.Dto.Account;
 using DreamChip.AnimalTracking.Domain.Entities;
 using DreamChip.AnimalTracking.Domain.Exceptions;
 using DreamChip.AnimalTracking.Domain.Exceptions.Account;
+using DreamChip.AnimalTracking.Domain.ValueObjects.Account;
 using LanguageExt.Common;
 
 namespace DreamChip.AnimalTracking.Application.Services;
@@ -52,5 +53,16 @@ public sealed class AccountService
         var accountDto = _mapper.Map<AccountDto>(account);
 
         return new Result<AccountDto>(accountDto);
+    }
+
+    public async Task<Result<List<AccountDto>>> GetPageAsync(AccountPageRequestDto dto)
+    {
+        var request = _mapper.Map<AccountPageRequest>(dto);
+
+        var accounts = await _accountRepository.GetPageAsync(request);
+
+        var accountsDto = _mapper.Map<List<AccountDto>>(accounts);
+
+        return accountsDto;
     }
 }
