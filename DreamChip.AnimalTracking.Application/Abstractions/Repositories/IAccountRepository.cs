@@ -8,6 +8,13 @@ namespace DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 public interface IAccountRepository
 {
     /// <summary>
+    /// Gets an account by its identifier.
+    /// </summary>
+    /// <param name="id">Identifier.</param>
+    /// <returns>Existing account or null.</returns>
+    Task<Account?> GetByIdAsync(long id);
+
+    /// <summary>
     /// Returns an account by email.
     /// </summary>
     /// <param name="email">Input email.</param>
@@ -18,6 +25,6 @@ public interface IAccountRepository
     /// Creates a new account.
     /// </summary>
     /// <param name="account">Account entity.</param>
-    /// <returns>Created account.</returns>
+    /// <returns>Identifier of created account.</returns>
     Task<int> CreateAsync(Account account);
 }

@@ -14,6 +14,19 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
     {
     }
 
+    public async Task<Account?> GetByIdAsync(long id)
+    {
+        var sql = $@"SELECT {string.Join(',', _columns)}
+                     FROM public.account
+                     WHERE id = @id";
+
+        var connection = await OpenConnection();
+
+        var account = await connection.QueryFirstOrDefaultAsync<Account>(sql, new { id });
+
+        return account;
+    }
+
     public async Task<Account?> GetByEmailAsync(string email)
     {
         var sql = @$"SELECT {string.Join(',', _columns)}

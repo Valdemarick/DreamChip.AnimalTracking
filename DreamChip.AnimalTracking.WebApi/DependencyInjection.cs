@@ -1,6 +1,5 @@
 ﻿using DreamChip.AnimalTracking.WebApi.Filters;
 using Serilog;
-using Serilog.Core;
 
 namespace DreamChip.AnimalTracking.WebApi;
 
@@ -19,7 +18,10 @@ internal static class DependencyInjection
             .ReadFrom.Configuration(builder.Configuration)
             .CreateLogger();
 
-        builder.Logging.ClearProviders();
-        builder.Logging.AddSerilog(logger);
+        builder.Services.AddLogging(config =>
+        {
+            config.ClearProviders();
+            config.AddSerilog(logger);
+        });
     }
 }
