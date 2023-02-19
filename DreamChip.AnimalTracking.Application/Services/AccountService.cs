@@ -66,21 +66,21 @@ public sealed class AccountService
         return accountsDto;
     }
 
-    public async Task<Result<Account>> DeleteAsync(int id)
+    public async Task<Result<AccountDto>> DeleteAsync(int id)
     {
         var account = await _accountRepository.GetByIdAsync(id);
         if (account == null)
         {
-            return new Result<Account>(new AccountNotFoundException());
+            return new Result<AccountDto>(new AccountNotFoundException());
         }
 
         if (account.Animals.Count > 0)
         {
-            return new Result<Account>(new AccountLinkedWithAnimalsException());
+            return new Result<AccountDto>(new AccountLinkedWithAnimalsException());
         }
 
-        //await _accountRepository.DeleteAsync(id);
+        await _accountRepository.DeleteAsync(id);
 
-        return new Result<Account>();
+        return new Result<AccountDto>(new AccountDto());
     }
 }

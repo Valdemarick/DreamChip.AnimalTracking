@@ -25,12 +25,12 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
 
         var connection = await OpenConnection();
 
+        Account? account = null;
         using var gridReader = await connection.QueryMultipleAsync(sql, new { id });
+        account = gridReader.Read<Account>().FirstOrDefault();
+            //account.Animals = gridReader.Read<Animal>().ToList();
 
-        var account = gridReader.Read<Account>().FirstOrDefault();
-        account.Animals = gridReader.Read<Animal>().ToList();
-
-        return account;
+            return account;
     }
 
     public async Task<Account?> GetByEmailAsync(string email)
@@ -88,9 +88,13 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
         return id;
     }
 
-    public Task DeleteAsync(int id)
+    public async Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var sql = @"DELETE FROM public.account
+                    WHERE id = @id";
+        
+        var connection = await OpenConnection();
+        await connection.ExecuteAsync(sql, new { id });
     }
 
     private string? CreateAccountPageFilter(AccountPageRequest request)

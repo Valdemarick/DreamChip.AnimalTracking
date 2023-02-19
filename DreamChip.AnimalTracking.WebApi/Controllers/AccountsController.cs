@@ -17,20 +17,20 @@ public sealed class AccountsController : BaseController
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetByIdAsync([FromRoute] int accountId)
+    public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
-        if (accountId <= 0)
+        if (id <= 0)
         {
             return BadRequest();
         }
 
-        var result = await _accountService.GetByIdAsync(accountId);
+        var result = await _accountService.GetByIdAsync(id);
 
         return GetResponseFromResult(result);
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> GetPage([FromQuery] AccountPageRequestDto dto)
+    public async Task<IActionResult> GetPageAsync([FromQuery] AccountPageRequestDto dto)
     {
         var result = await _accountService.GetPageAsync(dto);
 
@@ -38,7 +38,7 @@ public sealed class AccountsController : BaseController
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id)
+    public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
         var result = await _accountService.DeleteAsync(id);
 

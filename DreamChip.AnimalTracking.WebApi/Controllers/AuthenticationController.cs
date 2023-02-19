@@ -18,6 +18,6 @@ public sealed class AuthenticationController : BaseController
     {
         var result = await _accountService.CreateAccountAsync(dto);
 
-        return Ok(result);
+        return GetResponseFromResult(result);
     }
 }
