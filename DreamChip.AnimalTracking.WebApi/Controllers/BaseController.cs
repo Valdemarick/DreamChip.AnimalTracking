@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DreamChip.AnimalTracking.WebApi.Controllers;
 
+[ApiController]
 public abstract class BaseController : ControllerBase
 {
     [NonAction]

@@ -2,10 +2,8 @@
 using DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 using DreamChip.AnimalTracking.Domain.Entities;
 using DreamChip.AnimalTracking.Domain.ValueObjects.Account;
-using LanguageExt;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DreamChip.AnimalTracking.DAL.Repositories;
 
@@ -17,15 +15,20 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
     {
     }
 
-    public async Task<Account?> GetByIdAsync(long id)
+    public async Task<Account?> GetByIdAsync(int id)
     {
-        var sql = $@"SELECT {string.Join(',', _columns)}
-                     FROM public.account
-                     WHERE id = @id";
+        var sql = $@"SELECT {GetAccountColumns("acc")},
+                            {GetAnimalColumns("an")}
+                     FROM public.account acc
+                     LEFT JOIN public.animal an ON an.chipper_id = acc.id
+                     WHERE acc.id = @id";
 
         var connection = await OpenConnection();
 
-        var account = await connection.QueryFirstOrDefaultAsync<Account>(sql, new { id });
+        using var gridReader = await connection.QueryMultipleAsync(sql, new { id });
+
+        var account = gridReader.Read<Account>().FirstOrDefault();
+        account.Animals = gridReader.Read<Animal>().ToList();
 
         return account;
     }
@@ -39,7 +42,7 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
         var connection = await OpenConnection();
 
         var account = await connection.QueryFirstOrDefaultAsync<Account>(sql, new { email });
-        
+
         return account;
     }
 
@@ -85,6 +88,11 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
         return id;
     }
 
+    public Task DeleteAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     private string? CreateAccountPageFilter(AccountPageRequest request)
     {
         var filterConditions = new List<string>();
@@ -107,5 +115,15 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
         var filter = filterConditions.Any() ? $" WHERE ({string.Join(") AND (", filterConditions)})" : null;
 
         return filter;
+    }
+
+    private string GetAccountColumns(string alias)
+    {
+        return $@"{alias}.id, {alias}.last_name, {alias}.first_name, {alias}.email";
+    }
+
+    private string GetAnimalColumns(string alias)
+    {
+        return $@"{alias}.id";
     }
 }

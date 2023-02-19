@@ -22,7 +22,7 @@ public sealed class AccountService
         _mapper = mapper;
     }
 
-    public async Task<Result<AccountDto>> GetByIdAsync(long id)
+    public async Task<Result<AccountDto>> GetByIdAsync(int id)
     {
         var account = await _accountRepository.GetByIdAsync(id);
         if (account == null)
@@ -40,7 +40,7 @@ public sealed class AccountService
         var existingAccount = await _accountRepository.GetByEmailAsync(dto.Email);
         if (existingAccount != null)
         {
-            var exception = new AccountAlreadyExistsException();
+            var exception = new AccountWithTheSameEmailExistsException();
 
             return new Result<AccountDto>(exception);
         }
@@ -64,5 +64,23 @@ public sealed class AccountService
         var accountsDto = _mapper.Map<List<AccountDto>>(accounts);
 
         return accountsDto;
+    }
+
+    public async Task<Result<Account>> DeleteAsync(int id)
+    {
+        var account = await _accountRepository.GetByIdAsync(id);
+        if (account == null)
+        {
+            return new Result<Account>(new AccountNotFoundException());
+        }
+
+        if (account.Animals.Count > 0)
+        {
+            return new Result<Account>(new AccountLinkedWithAnimalsException());
+        }
+
+        //await _accountRepository.DeleteAsync(id);
+
+        return new Result<Account>();
     }
 }

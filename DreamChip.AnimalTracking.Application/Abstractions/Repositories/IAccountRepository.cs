@@ -13,7 +13,7 @@ public interface IAccountRepository
     /// </summary>
     /// <param name="id">Identifier.</param>
     /// <returns>Existing account or null.</returns>
-    Task<Account?> GetByIdAsync(long id);
+    Task<Account?> GetByIdAsync(int id);
 
     /// <summary>
     /// Returns an account by email.
@@ -35,4 +35,11 @@ public interface IAccountRepository
     /// <param name="account">Account entity.</param>
     /// <returns>Identifier of created account.</returns>
     Task<int> CreateAsync(Account account);
+
+    /// <summary>
+    /// Deletes account by idenitifier.
+    /// </summary>
+    /// <param name="id">Account identifier.</param>
+    /// <returns></returns>
+    Task DeleteAsync(int id);
 }

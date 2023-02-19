@@ -6,12 +6,12 @@ namespace DreamChip.AnimalTracking.Application.Infrastructure.DtoValidators.Acco
 /// <summary>
 /// Validation for CreateAccountDto.
 /// </summary>
-public sealed class CreateAccountDtoValidator : AbstractValidator<CreateAccountDto>
+public class CreateAccountDtoValidator : AbstractValidator<CreateAccountDto>
 {
     public CreateAccountDtoValidator()
     {
         RuleFor(x => x.FirstName)
-            .Must(Extensions.IsFirstNameValid);
+            .NotNull().WithMessage("null");
 
         RuleFor(x => x.LastName)
             .Must(Extensions.IsLastNameValid);
