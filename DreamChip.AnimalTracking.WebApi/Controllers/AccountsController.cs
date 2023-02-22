@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DreamChip.AnimalTracking.WebApi.Controllers;
 
 [Route("[controller]")]
-[ServiceFilter(typeof(AuthorizationFilter))]
+[ServiceFilter(typeof(CheckAuthorizationDataFilter))]
 public sealed class AccountsController : BaseController
 {
     private readonly AccountService _accountService;
@@ -23,7 +23,7 @@ public sealed class AccountsController : BaseController
         {
             return BadRequest();
         }
-
+        
         var result = await _accountService.GetByIdAsync(id);
 
         return GetResponseFromResult(result);
@@ -37,9 +37,29 @@ public sealed class AccountsController : BaseController
         return GetResponseFromResult(result);
     }
 
+    [HttpPut("{id:int}")]
+    [ServiceFilter(typeof(AuthorizationFilter))]
+    public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] UpdateAccountDto dto)
+    {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
+        var result = await _accountService.UpdateAsync(id, dto);
+
+        return GetResponseFromResult(result);
+    }
+
     [HttpDelete("{id:int}")]
+    [ServiceFilter(typeof(AuthorizationFilter))]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
         var result = await _accountService.DeleteAsync(id);
 
         return GetResponseFromResult(result);

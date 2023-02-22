@@ -35,7 +35,18 @@ public sealed class AccountService
         return new Result<AccountDto>(accountDto);
     }
 
-    public async Task<Result<AccountDto>> CreateAccountAsync(CreateAccountDto dto)
+    public async Task<Result<List<AccountDto>>> GetPageAsync(AccountPageRequestDto dto)
+    {
+        var request = _mapper.Map<AccountPageRequest>(dto);
+
+        var accounts = await _accountRepository.GetPageAsync(request);
+
+        var accountsDto = _mapper.Map<List<AccountDto>>(accounts);
+
+        return accountsDto;
+    }
+
+    public async Task<Result<AccountDto>> CreateAsync(CreateAccountDto dto)
     {
         var existingAccount = await _accountRepository.GetByEmailAsync(dto.Email);
         if (existingAccount != null)
@@ -55,15 +66,26 @@ public sealed class AccountService
         return new Result<AccountDto>(accountDto);
     }
 
-    public async Task<Result<List<AccountDto>>> GetPageAsync(AccountPageRequestDto dto)
+    public async Task<Result<AccountDto>> UpdateAsync(int id, UpdateAccountDto dto)
     {
-        var request = _mapper.Map<AccountPageRequest>(dto);
+        var account = await _accountRepository.GetByIdAsync(id);
+        if (account == null)
+        {
+            return new Result<AccountDto>(new AccountNotFoundException());
+        }
 
-        var accounts = await _accountRepository.GetPageAsync(request);
+        account = await _accountRepository.GetByEmailAsync(dto.Email);
+        if (account != null && account.Id != id)
+        {
+            return new Result<AccountDto>(new AccountWithTheSameEmailExistsException());
+        }
 
-        var accountsDto = _mapper.Map<List<AccountDto>>(accounts);
+        account = _mapper.Map<Account>(dto);
+        await _accountRepository.UpdateAsync(account);
 
-        return accountsDto;
+        var accountDto = _mapper.Map<AccountDto>(account);
+
+        return new Result<AccountDto>(accountDto);
     }
 
     public async Task<Result<AccountDto>> DeleteAsync(int id)

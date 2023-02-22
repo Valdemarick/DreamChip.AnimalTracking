@@ -16,7 +16,7 @@ public sealed class AuthenticationController : BaseController
     [HttpPost("registration")]
     public async Task<IActionResult> CreateAsync([FromBody] CreateAccountDto dto)
     {
-        var result = await _accountService.CreateAccountAsync(dto);
+        var result = await _accountService.CreateAsync(dto);
 
         return GetResponseFromResult(result);
     }

@@ -3,24 +3,20 @@ using FluentValidation;
 
 namespace DreamChip.AnimalTracking.Application.Infrastructure.DtoValidators.Account;
 
-/// <summary>
-/// Validation for CreateAccountDto.
-/// </summary>
-public sealed class CreateAccountDtoValidator : AbstractValidator<CreateAccountDto>
+public sealed class UpdateAccountDtoValidator  :AbstractValidator<UpdateAccountDto>
 {
-    public CreateAccountDtoValidator()
+    public UpdateAccountDtoValidator()
     {
         RuleFor(x => x.FirstName)
-            .NotNull().WithMessage("null");
+            .Must(Extensions.IsFirstNameValid);
 
         RuleFor(x => x.LastName)
             .Must(Extensions.IsLastNameValid);
 
-        RuleFor(x => x.Email)
-            .EmailAddress()
-            .Must(Extensions.IsEmailValid);
-
         RuleFor(x => x.Password)
             .Must(Extensions.IsPasswordValid);
+
+        RuleFor(x => x.Email)
+            .Must(Extensions.IsEmailValid);
     }
 }

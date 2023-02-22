@@ -16,5 +16,8 @@ internal sealed class AccountProfile : Profile
         CreateMap<Account, AccountDto>();
 
         CreateMap<AccountPageRequestDto, AccountPageRequest>();
+
+        CreateMap<UpdateAccountDto, Account>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }

@@ -8,7 +8,7 @@ public sealed class AccountPageRequestDtoValidator : AbstractValidator<AccountPa
     public AccountPageRequestDtoValidator()
     {
         RuleFor(x => x.From)
-            .GreaterThan(0);
+            .GreaterThanOrEqualTo(0);
 
         RuleFor(x => x.Size)
             .GreaterThan(0);

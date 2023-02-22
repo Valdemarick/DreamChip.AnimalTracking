@@ -33,7 +33,7 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
             return account;
     }
 
-    public async Task<Account?> GetByEmailAsync(string email)
+    public async Task<Account?> GetByEmailAsync(string? email)
     {
         var sql = @$"SELECT {string.Join(',', _columns)}
                     FROM public.account
@@ -61,9 +61,9 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
 
         var accounts = await connection.QueryAsync<Account>(sql, new
         {
-            firstName = $"%{request.FirstName}$",
+            firstName = request.FirstName?.ToLower(),
             lastName = request.LastName?.ToLower(),
-            email = $"%{request.Email}%",
+            email = request.Email?.ToLower(),
             from = request.From,
             size = request.Size
         });
@@ -86,6 +86,24 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
         transaction.Commit();
 
         return id;
+    }
+
+    public async Task<Account> UpdateAsync(Account account)
+    {
+        var sql = @"UPDATE public.account
+                    SET first_name = @firstName, last_name = @lastName, email = @email, password = @password
+                    WHERE id = @id";
+
+        var connection = await OpenConnection();
+        await connection.ExecuteAsync(sql, new
+        {
+            firstName = account.FirstName,
+            lastName = account.LastName,
+            email = account.Email,
+            password = account.Password
+        });
+
+        return account;
     }
 
     public async Task DeleteAsync(int id)
