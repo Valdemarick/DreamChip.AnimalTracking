@@ -8,10 +8,9 @@ namespace DreamChip.AnimalTracking.WebApi.Controllers;
 [ApiController]
 public abstract class BaseController : ControllerBase
 {
-    private static readonly List<Type> ConflictExceptionTypes = new List<Type>
+    private static readonly List<Type> BadRequestExceptionTypes = new List<Type>
     {
-        typeof(AccountWithTheSameEmailExistsException),
-        typeof(LocationWithSuchCoordinatesAlreadyExistsException)
+        typeof(AccountLinkedWithAnimalsException)
     };
 
     private static readonly List<Type> NotFoundExceptionTypes = new List<Type>
@@ -20,6 +19,12 @@ public abstract class BaseController : ControllerBase
         typeof(LocationNotFoundException)
     };
     
+    private static readonly List<Type> ConflictExceptionTypes = new List<Type>
+    {
+        typeof(AccountWithTheSameEmailExistsException),
+        typeof(LocationWithSuchCoordinatesAlreadyExistsException)
+    };
+
     [NonAction]
     protected IActionResult GetResponseFromResult<TValue>(Result<TValue> result)
     {
@@ -28,14 +33,19 @@ public abstract class BaseController : ControllerBase
             return Ok(res);
         }, ex =>
         {
-            if (ConflictExceptionTypes.Contains(ex.GetType()))
+            if (BadRequestExceptionTypes.Contains(ex.GetType()))
             {
-                return Conflict();
+                return BadRequest();
             }
-
+            
             if (NotFoundExceptionTypes.Contains(ex.GetType()))
             {
                 return NotFound();
+            }
+            
+            if (ConflictExceptionTypes.Contains(ex.GetType()))
+            {
+                return Conflict();
             }
 
             return StatusCode(500);

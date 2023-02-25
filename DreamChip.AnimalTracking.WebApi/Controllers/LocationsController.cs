@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace DreamChip.AnimalTracking.WebApi.Controllers;
 
 [Route("[controller]")]
-[ServiceFilter(typeof(AuthorizationFilter))]
 [ServiceFilter(typeof(CheckAuthorizationDataFilter))]
 public sealed class LocationsController : BaseController
 {
@@ -31,6 +30,7 @@ public sealed class LocationsController : BaseController
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(AuthorizationFilter))]
     public async Task<IActionResult> CreateAsync([FromBody] CreateLocationDto dto)
     {
         var result = await _locationService.CreateAsync(dto);
