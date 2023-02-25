@@ -7,7 +7,7 @@ public sealed class LocationPointTableMigration : Migration
 {
     public override void Up()
     {
-        if (!Schema.Table("location_point").Exists())
+        if (!Schema.Table("location").Exists())
         {
             Create.Table("location_point")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
@@ -18,6 +18,6 @@ public sealed class LocationPointTableMigration : Migration
 
     public override void Down()
     {
-        Delete.Table("location_point");
+        Delete.Table("location");
     }
 }

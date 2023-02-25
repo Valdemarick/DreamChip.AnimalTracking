@@ -3,12 +3,12 @@
 /// <summary>
 /// Location Point entity.
 /// </summary>
-public sealed class LocationPoint : BaseEntity<long>
+public sealed class Location : BaseEntity<long>
 {
     /// <summary>
     /// Constructor.
     /// </summary>
-    public LocationPoint()
+    public Location()
     {
         AnimalVisitedLocations = new List<AnimalVisitedLocation>();
     }
