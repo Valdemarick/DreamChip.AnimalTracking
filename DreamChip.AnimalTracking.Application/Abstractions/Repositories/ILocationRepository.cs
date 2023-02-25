@@ -30,4 +30,11 @@ public interface ILocationRepository
     /// <param name="location">Location entity.</param>
     /// <returns>Identifier.</returns>
     Task<long> CreateAsync(Location location);
+
+    /// <summary>
+    /// Updates the location.
+    /// </summary>
+    /// <param name="location">New data.</param>
+    /// <returns>Updated location.</returns>
+    Task<Location> UpdateAsync(Location location);
 }

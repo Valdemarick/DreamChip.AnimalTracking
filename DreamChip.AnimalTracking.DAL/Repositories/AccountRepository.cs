@@ -97,6 +97,7 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
         var connection = await OpenConnection();
         await connection.ExecuteAsync(sql, new
         {
+            id = account.Id,
             firstName = account.FirstName,
             lastName = account.LastName,
             email = account.Email,

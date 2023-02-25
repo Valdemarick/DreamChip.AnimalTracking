@@ -52,4 +52,32 @@ public sealed class LocationService
 
         return new Result<LocationDto>(locationDto);
     }
+
+    public async Task<Result<LocationDto>> UpdateAsync(long id, UpdateLocationDto dto)
+    {
+        var location = await _locationRepository.GetByIdAsync(id);
+        if (location is null)
+        {
+            var exception = new LocationNotFoundException();
+
+            return new Result<LocationDto>(exception);
+        }
+
+        location = await _locationRepository.GetByCoordinatesAsync(dto.Latitude, dto.Longitude);
+        if (location is not null)
+        {
+            var exception = new LocationWithSuchCoordinatesAlreadyExistsException();
+
+            return new Result<LocationDto>(exception);
+        }
+
+        location = _mapper.Map<Location>(dto);
+        location.Id = id;
+
+        await _locationRepository.UpdateAsync(location);
+
+        var locationDto = _mapper.Map<LocationDto>(location);
+
+        return new Result<LocationDto>(locationDto);
+    }
 }

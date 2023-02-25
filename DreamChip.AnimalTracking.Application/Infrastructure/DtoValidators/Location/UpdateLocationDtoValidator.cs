@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace DreamChip.AnimalTracking.Application.Infrastructure.DtoValidators.Location;
 
-public class CreateLocationDtoValidator : AbstractValidator<CreateLocationDto>
+public sealed class UpdateLocationDtoValidator : AbstractValidator<UpdateLocationDto>
 {
-    public CreateLocationDtoValidator()
+    public UpdateLocationDtoValidator()
     {
         RuleFor(x => x.Latitude)
             .NotNull()
@@ -16,5 +16,5 @@ public class CreateLocationDtoValidator : AbstractValidator<CreateLocationDto>
             .NotNull()
             .GreaterThanOrEqualTo(-180.0)
             .LessThanOrEqualTo(180.0);
-    }    
+    }
 }

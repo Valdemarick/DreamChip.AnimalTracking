@@ -15,7 +15,7 @@ public sealed class LocationsController : BaseController
     {
         _locationService = locationService;
     }
-
+    
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] long id)
     {
@@ -34,6 +34,20 @@ public sealed class LocationsController : BaseController
     public async Task<IActionResult> CreateAsync([FromBody] CreateLocationDto dto)
     {
         var result = await _locationService.CreateAsync(dto);
+
+        return GetResponseFromResult(result);
+    }
+
+    [HttpPut("{id:long}")]
+    [ServiceFilter(typeof(AuthorizationFilter))]
+    public async Task<IActionResult> UpdateAsync([FromRoute] long id, [FromBody] UpdateLocationDto dto)
+    {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
+        var result = await _locationService.UpdateAsync(id, dto);
 
         return GetResponseFromResult(result);
     }

@@ -51,4 +51,22 @@ public sealed class LocationRepository : BaseRepository, ILocationRepository
 
         return id;
     }
+
+    public async Task<Location> UpdateAsync(Location location)
+    {
+        var sql = @"UPDATE public.location
+                    SET latitude = @latitude, longitude = @longitude
+                    WHERE id = @id";
+
+        var connection = await OpenConnection();
+
+        await connection.ExecuteAsync(sql, new
+        {
+            id = location.Id,
+            latitude = location.Latitude,
+            longitude = location.Longitude
+        });
+
+        return location;
+    }
 }

@@ -13,5 +13,9 @@ public sealed class LocationProfile : Profile
         CreateMap<CreateLocationDto, Location>()
             .ForMember(dest => dest.Id, 
                 opt => opt.Ignore());
+
+        CreateMap<UpdateLocationDto, Location>()
+            .ForMember(dest => dest.Id,
+                opt => opt.Ignore());
     }
 }
