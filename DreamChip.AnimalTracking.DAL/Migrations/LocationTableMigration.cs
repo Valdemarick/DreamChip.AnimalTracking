@@ -9,7 +9,7 @@ public sealed class LocationPointTableMigration : Migration
     {
         if (!Schema.Table("location").Exists())
         {
-            Create.Table("location_point")
+            Create.Table("location")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
                 .WithColumn("latitude").AsDouble().NotNullable()
                 .WithColumn("longitude").AsDouble().NotNullable();

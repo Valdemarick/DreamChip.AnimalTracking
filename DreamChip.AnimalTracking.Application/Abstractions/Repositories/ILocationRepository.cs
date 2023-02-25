@@ -1,4 +1,5 @@
-﻿using DreamChip.AnimalTracking.Domain.Entities;
+﻿using DreamChip.AnimalTracking.Application.Dto.Location;
+using DreamChip.AnimalTracking.Domain.Entities;
 using Serilog;
 
 namespace DreamChip.AnimalTracking.Application.Abstractions.Repositories;
@@ -14,4 +15,19 @@ public interface ILocationRepository
     /// <param name="id">Identifier.</param>
     /// <returns>Particular location or null.</returns>
     Task<Location?> GetByIdAsync(long id);
+
+    /// <summary>
+    /// Gets location by coordinates.
+    /// </summary>
+    /// <param name="latitude">Geographic latitude.</param>
+    /// <param name="longitude">Geographic longitude.</param>
+    /// <returns>Existing location or null.</returns>
+    Task<Location?> GetByCoordinatesAsync(double latitude, double longitude);
+
+    /// <summary>
+    /// Creates a new location.
+    /// </summary>
+    /// <param name="location">Location entity.</param>
+    /// <returns>Identifier.</returns>
+    Task<long> CreateAsync(Location location);
 }

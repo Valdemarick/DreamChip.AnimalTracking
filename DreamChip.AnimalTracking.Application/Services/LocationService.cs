@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 using DreamChip.AnimalTracking.Application.Dto.Location;
+using DreamChip.AnimalTracking.Domain.Entities;
 using DreamChip.AnimalTracking.Domain.Exceptions.Location;
 using LanguageExt.Common;
 
@@ -27,6 +28,26 @@ public sealed class LocationService
             return new Result<LocationDto>(exception);
         }
         
+        var locationDto = _mapper.Map<LocationDto>(location);
+
+        return new Result<LocationDto>(locationDto);
+    }
+
+    public async Task<Result<LocationDto>> CreateAsync(CreateLocationDto dto)
+    {
+        var location = await _locationRepository.GetByCoordinatesAsync(dto.Latitude, dto.Longitude);
+        if (location is not null)
+        {
+            var exception = new LocationWithSuchCoordinatesAlreadyExistsException();
+
+            return new Result<LocationDto>(exception);
+        }
+
+        location = _mapper.Map<Location>(dto);
+
+        var id = await _locationRepository.CreateAsync(location);
+        location.Id = id;
+
         var locationDto = _mapper.Map<LocationDto>(location);
 
         return new Result<LocationDto>(locationDto);
