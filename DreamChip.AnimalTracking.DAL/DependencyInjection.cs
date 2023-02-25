@@ -23,7 +23,8 @@ public static class DependencyInjection
                     .All();
             });
 
-        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IAccountRepository, AccountRepository>()
+            .AddScoped<ILocationRepository, LocationRepository>();
 
         return services;
     }

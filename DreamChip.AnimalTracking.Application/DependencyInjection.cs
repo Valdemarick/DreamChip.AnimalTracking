@@ -16,7 +16,8 @@ public static class DependencyInjection
             .AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters();
 
-        services.AddScoped<AccountService>();
+        services.AddScoped<AccountService>()
+            .AddScoped<LocationService>();
 
         return services;
     }
