@@ -10,19 +10,20 @@ public abstract class BaseController : ControllerBase
 {
     private static readonly List<Type> BadRequestExceptionTypes = new List<Type>
     {
-        typeof(AccountLinkedWithAnimalsException)
+        typeof(AccountLinkedWithAnimalsException),
+        typeof(LocationLinkedWithAnimalException),
     };
 
     private static readonly List<Type> NotFoundExceptionTypes = new List<Type>
     {
         typeof(AccountNotFoundException),
-        typeof(LocationNotFoundException)
+        typeof(LocationNotFoundException),
     };
     
     private static readonly List<Type> ConflictExceptionTypes = new List<Type>
     {
         typeof(AccountWithTheSameEmailExistsException),
-        typeof(LocationWithSuchCoordinatesAlreadyExistsException)
+        typeof(LocationWithSuchCoordinatesAlreadyExistsException),
     };
 
     [NonAction]

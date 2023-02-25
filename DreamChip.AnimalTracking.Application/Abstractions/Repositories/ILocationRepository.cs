@@ -1,6 +1,4 @@
-﻿using DreamChip.AnimalTracking.Application.Dto.Location;
-using DreamChip.AnimalTracking.Domain.Entities;
-using Serilog;
+﻿using DreamChip.AnimalTracking.Domain.Entities;
 
 namespace DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 
@@ -37,4 +35,11 @@ public interface ILocationRepository
     /// <param name="location">New data.</param>
     /// <returns>Updated location.</returns>
     Task<Location> UpdateAsync(Location location);
+
+    /// <summary>
+    /// Deletes location by identifier.
+    /// </summary>
+    /// <param name="id">Identifier.</param>
+    /// <returns></returns>
+    Task DeleteAsync(long id);
 }

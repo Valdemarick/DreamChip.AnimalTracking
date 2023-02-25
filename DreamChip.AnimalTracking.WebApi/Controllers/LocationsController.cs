@@ -51,4 +51,18 @@ public sealed class LocationsController : BaseController
 
         return GetResponseFromResult(result);
     }
+
+    [HttpDelete("{id:long}")]
+    [ServiceFilter(typeof(AuthorizationFilter))]
+    public async Task<IActionResult> DeleteAsync([FromRoute] long id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
+        var result = await _locationService.DeleteAsync(id);
+
+        return GetResponseFromResult(result);
+    }
 }

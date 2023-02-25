@@ -80,4 +80,26 @@ public sealed class LocationService
 
         return new Result<LocationDto>(locationDto);
     }
+
+    public async Task<Result<LocationDto>> DeleteAsync(long id)
+    {
+        var location = await _locationRepository.GetByIdAsync(id);
+        if (location is null)
+        {
+            var exception = new LocationNotFoundException();
+
+            return new Result<LocationDto>(exception);
+        }
+
+        if (location.AnimalVisitedLocations.Any())
+        {
+            var exception = new LocationLinkedWithAnimalException();
+
+            return new Result<LocationDto>(exception);
+        }
+
+        await _locationRepository.DeleteAsync(id);
+
+        return new Result<LocationDto>(new LocationDto());
+    }
 }

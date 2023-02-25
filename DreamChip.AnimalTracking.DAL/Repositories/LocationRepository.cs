@@ -69,4 +69,13 @@ public sealed class LocationRepository : BaseRepository, ILocationRepository
 
         return location;
     }
+
+    public async Task DeleteAsync(long id)
+    {
+        var sql = @"DELETE FROM public.location
+                    WHERE id = @id";
+
+        var connection = await OpenConnection();
+        await connection.ExecuteAsync(sql, new { id });
+    }
 }
