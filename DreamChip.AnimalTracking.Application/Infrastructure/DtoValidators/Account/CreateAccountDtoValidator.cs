@@ -11,7 +11,7 @@ public sealed class CreateAccountDtoValidator : AbstractValidator<CreateAccountD
     public CreateAccountDtoValidator()
     {
         RuleFor(x => x.FirstName)
-            .NotNull().WithMessage("null");
+            .Must(Extensions.IsFirstNameValid);
 
         RuleFor(x => x.LastName)
             .Must(Extensions.IsLastNameValid);

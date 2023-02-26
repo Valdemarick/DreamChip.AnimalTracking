@@ -1,4 +1,5 @@
-﻿using DreamChip.AnimalTracking.Domain.Exceptions.Account;
+﻿using System.Net;
+using DreamChip.AnimalTracking.Domain.Exceptions.Account;
 using DreamChip.AnimalTracking.Domain.Exceptions.Location;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,8 @@ namespace DreamChip.AnimalTracking.WebApi.Controllers;
 [ApiController]
 public abstract class BaseController : ControllerBase
 {
+    protected delegate IActionResult OkRes<in TValue>(TValue val);
+    
     private static readonly List<Type> BadRequestExceptionTypes = new List<Type>
     {
         typeof(AccountLinkedWithAnimalsException),
@@ -27,11 +30,14 @@ public abstract class BaseController : ControllerBase
     };
 
     [NonAction]
-    protected IActionResult GetResponseFromResult<TValue>(Result<TValue> result)
+    protected IActionResult GetResponseFromResult<TValue>(Result<TValue> result, HttpStatusCode statusCode)
     {
-        return result.Match<IActionResult>(res =>
+        return result.Match<IActionResult>(value =>
         {
-            return Ok(res);
+            return new ObjectResult(value)
+            {
+                StatusCode = (int)statusCode
+            };
         }, ex =>
         {
             if (BadRequestExceptionTypes.Contains(ex.GetType()))

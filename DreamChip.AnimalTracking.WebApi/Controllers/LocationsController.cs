@@ -1,3 +1,4 @@
+using System.Net;
 using DreamChip.AnimalTracking.Application.Dto.Location;
 using DreamChip.AnimalTracking.Application.Services;
 using DreamChip.AnimalTracking.WebApi.Filters;
@@ -26,7 +27,7 @@ public sealed class LocationsController : BaseController
 
         var result = await _locationService.GetByIdAsync(id);
 
-        return GetResponseFromResult(result);
+        return GetResponseFromResult(result, HttpStatusCode.OK);
     }
 
     [HttpPost]
@@ -35,7 +36,7 @@ public sealed class LocationsController : BaseController
     {
         var result = await _locationService.CreateAsync(dto);
 
-        return GetResponseFromResult(result);
+        return GetResponseFromResult(result, HttpStatusCode.Created);
     }
 
     [HttpPut("{id:long}")]
@@ -49,7 +50,7 @@ public sealed class LocationsController : BaseController
 
         var result = await _locationService.UpdateAsync(id, dto);
 
-        return GetResponseFromResult(result);
+        return GetResponseFromResult(result, HttpStatusCode.OK);
     }
 
     [HttpDelete("{id:long}")]
@@ -63,6 +64,6 @@ public sealed class LocationsController : BaseController
 
         var result = await _locationService.DeleteAsync(id);
 
-        return GetResponseFromResult(result);
+        return GetResponseFromResult(result, HttpStatusCode.OK);
     }
 }

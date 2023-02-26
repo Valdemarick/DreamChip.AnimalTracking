@@ -1,4 +1,5 @@
-﻿using DreamChip.AnimalTracking.Application.Dto.Account;
+﻿using System.Net;
+using DreamChip.AnimalTracking.Application.Dto.Account;
 using DreamChip.AnimalTracking.Application.Services;
 using DreamChip.AnimalTracking.WebApi.Filters;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public sealed class AccountsController : BaseController
         
         var result = await _accountService.GetByIdAsync(id);
 
-        return GetResponseFromResult(result);
+        return GetResponseFromResult(result, HttpStatusCode.OK);
     }
 
     [HttpGet("search")]
@@ -34,7 +35,7 @@ public sealed class AccountsController : BaseController
     {
         var result = await _accountService.GetPageAsync(dto);
 
-        return GetResponseFromResult(result);
+        return GetResponseFromResult(result, HttpStatusCode.OK);
     }
 
     [HttpPut("{id:int}")]
@@ -48,7 +49,7 @@ public sealed class AccountsController : BaseController
 
         var result = await _accountService.UpdateAsync(id, dto);
 
-        return GetResponseFromResult(result);
+        return GetResponseFromResult(result, HttpStatusCode.OK);
     }
 
     [HttpDelete("{id:int}")]
@@ -62,6 +63,6 @@ public sealed class AccountsController : BaseController
 
         var result = await _accountService.DeleteAsync(id);
 
-        return GetResponseFromResult(result);
+        return GetResponseFromResult(result, HttpStatusCode.OK);
     }
 }

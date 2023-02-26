@@ -20,10 +20,10 @@ public sealed class AccountPageRequestDto
     /// <summary>
     /// Element number for skipping.
     /// </summary>
-    public int From { get; set; }
+    public int From { get; set; } = 0;
 
     /// <summary>
     /// Page size.
     /// </summary>
-    public int Size { get; set; }
+    public int Size { get; set; } = 10;
 }

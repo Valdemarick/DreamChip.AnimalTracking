@@ -61,9 +61,9 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
 
         var accounts = await connection.QueryAsync<Account>(sql, new
         {
-            firstName = request.FirstName?.ToLower(),
-            lastName = request.LastName?.ToLower(),
-            email = request.Email?.ToLower(),
+            firstName = $"%{request.FirstName?.Trim().ToLower()}%",
+            lastName = $"%{request.LastName?.Trim().ToLower()}%",
+            email = $"%{request.Email?.Trim().ToLower()}%",
             from = request.From,
             size = request.Size
         });
