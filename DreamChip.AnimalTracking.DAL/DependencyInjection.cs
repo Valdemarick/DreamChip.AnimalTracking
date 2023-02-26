@@ -24,7 +24,8 @@ public static class DependencyInjection
             });
 
         services.AddScoped<IAccountRepository, AccountRepository>()
-            .AddScoped<ILocationRepository, LocationRepository>();
+            .AddScoped<ILocationRepository, LocationRepository>()
+            .AddScoped<IAnimalTypeRepository, AnimalTypeRepository>();
 
         return services;
     }

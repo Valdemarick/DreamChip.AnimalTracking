@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using DreamChip.AnimalTracking.Application.Abstractions.Services;
 using FluentValidation;
 
 namespace DreamChip.AnimalTracking.Application;
@@ -17,7 +18,8 @@ public static class DependencyInjection
             .AddFluentValidationClientsideAdapters();
 
         services.AddScoped<AccountService>()
-            .AddScoped<LocationService>();
+            .AddScoped<LocationService>()
+            .AddScoped<IAnimalTypeService, AnimalTypeService>();
 
         return services;
     }
