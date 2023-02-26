@@ -11,16 +11,16 @@ public sealed class CreateAccountDtoValidator : AbstractValidator<CreateAccountD
     public CreateAccountDtoValidator()
     {
         RuleFor(x => x.FirstName)
-            .Must(Extensions.IsFirstNameValid);
+            .Must(AccountValidatorRules.IsFirstNameValid);
 
         RuleFor(x => x.LastName)
-            .Must(Extensions.IsLastNameValid);
+            .Must(AccountValidatorRules.IsLastNameValid);
 
         RuleFor(x => x.Email)
             .EmailAddress()
-            .Must(Extensions.IsEmailValid);
+            .Must(AccountValidatorRules.IsEmailValid);
 
         RuleFor(x => x.Password)
-            .Must(Extensions.IsPasswordValid);
+            .Must(AccountValidatorRules.IsPasswordValid);
     }
 }

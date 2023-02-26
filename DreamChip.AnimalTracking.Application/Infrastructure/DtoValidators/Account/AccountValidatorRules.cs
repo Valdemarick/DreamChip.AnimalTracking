@@ -1,6 +1,6 @@
 ﻿namespace DreamChip.AnimalTracking.Application.Infrastructure.DtoValidators.Account;
 
-public static class Extensions
+public static class AccountValidatorRules
 {
     public static bool IsPasswordValid(string? password)
     {

@@ -8,15 +8,15 @@ public sealed class UpdateAccountDtoValidator  :AbstractValidator<UpdateAccountD
     public UpdateAccountDtoValidator()
     {
         RuleFor(x => x.FirstName)
-            .Must(Extensions.IsFirstNameValid);
+            .Must(AccountValidatorRules.IsFirstNameValid);
 
         RuleFor(x => x.LastName)
-            .Must(Extensions.IsLastNameValid);
+            .Must(AccountValidatorRules.IsLastNameValid);
 
         RuleFor(x => x.Password)
-            .Must(Extensions.IsPasswordValid);
+            .Must(AccountValidatorRules.IsPasswordValid);
 
         RuleFor(x => x.Email)
-            .Must(Extensions.IsEmailValid);
+            .Must(AccountValidatorRules.IsEmailValid);
     }
 }
