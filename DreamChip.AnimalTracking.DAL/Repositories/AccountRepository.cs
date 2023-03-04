@@ -25,12 +25,18 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
 
         var connection = await OpenConnection();
 
-        Account? account = null;
-        using var gridReader = await connection.QueryMultipleAsync(sql, new { id });
-        account = gridReader.Read<Account>().FirstOrDefault();
-            //account.Animals = gridReader.Read<Animal>().ToList();
+        var account = (await connection.QueryAsync<Account, Animal, Account>(sql,
+            (account, animal) =>
+            {
+                account.Animals.Add(animal);
 
-            return account;
+                return account;
+            }, 
+        new { id }))
+            .AsQueryable()
+            .FirstOrDefault();
+
+        return account;
     }
 
     public async Task<Account?> GetByEmailAsync(string? email)
