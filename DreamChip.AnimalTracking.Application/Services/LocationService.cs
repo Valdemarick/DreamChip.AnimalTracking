@@ -91,7 +91,7 @@ public sealed class LocationService
             return new Result<LocationDto>(exception);
         }
 
-        if (location.AnimalVisitedLocations.Any())
+        if (location.AnimalVisitedLocations.Count > 0)
         {
             var exception = new LocationLinkedWithAnimalException();
 

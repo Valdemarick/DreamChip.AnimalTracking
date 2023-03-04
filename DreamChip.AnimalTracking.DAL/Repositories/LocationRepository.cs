@@ -15,13 +15,29 @@ public sealed class LocationRepository : BaseRepository, ILocationRepository
     
     public async Task<Location?> GetByIdAsync(long id)
     {
-        var sql = $@"SELECT {string.Join(',', _columns)}
-                     FROM public.location
-                     WHERE id = @id";
+        var sql = $@"SELECT {GetLocationColumns("l")},
+                            {GetAnimalVisitedLocationColumns("avl")},
+                            {GetAnimalColumns("a")}
+                     FROM public.location l
+                     LEFT JOIN public.animal_visited_location avl ON l.id = avl.location_id
+                     LEFT JOIN animal a ON avl.animal_id = a.id
+                     WHERE l.id = @id";
 
         var connection = await OpenConnection();
 
-        return await connection.QueryFirstOrDefaultAsync<Location>(sql, new { id });
+        return (await connection.QueryAsync<Location, AnimalVisitedLocation, Animal, Location?>(
+                sql,
+                (location, animalVisitedLocation, animal) =>
+                {
+                    animal?.AnimalVisitedLocations.Add(animalVisitedLocation);
+                    location?.AnimalVisitedLocations.Add(animalVisitedLocation);
+
+                    return location;
+                }, 
+                new { id },
+                splitOn: "location_id, id"))
+            .AsQueryable()
+            .FirstOrDefault();
     }
 
     public async Task<Location?> GetByCoordinatesAsync(double latitude, double longitude)
@@ -77,5 +93,26 @@ public sealed class LocationRepository : BaseRepository, ILocationRepository
 
         var connection = await OpenConnection();
         await connection.ExecuteAsync(sql, new { id });
+    }
+
+    private string GetAnimalVisitedLocationColumns(string? tableName = null)
+    {
+        var alias = tableName is not null ? $"{tableName}." : null; 
+        
+        return $"{alias}animal_id, {alias}location_id";
+    }
+
+    private string GetLocationColumns(string? tableName = null)
+    {
+        var alias = tableName is not null ? $"{tableName}." : null;
+
+        return $"{alias}id, {alias}latitude, {alias}longitude";
+    }
+
+    private string GetAnimalColumns(string? tableName = null)
+    {
+        var alias = tableName is not null ? $"{tableName}." : null;
+
+        return $"{alias}id";
     }
 }

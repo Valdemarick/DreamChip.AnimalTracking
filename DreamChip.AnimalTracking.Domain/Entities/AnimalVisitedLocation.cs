@@ -12,7 +12,7 @@ public sealed class AnimalVisitedLocation : BaseEntity<long>
     /// </summary>
     public AnimalVisitedLocation()
     {
-        
+        DateTimeOfVisitLocationPoint = DateTime.Now;
     }
 
     /// <summary>
@@ -30,6 +30,6 @@ public sealed class AnimalVisitedLocation : BaseEntity<long>
     /// <summary>
     /// The location point identifier.
     /// </summary>
-    [Column("location_point_id")]
+    [Column("location_id")]
     public required long LocationPointId { get; set; }
 }
