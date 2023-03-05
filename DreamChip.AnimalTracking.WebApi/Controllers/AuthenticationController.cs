@@ -1,7 +1,6 @@
 using System.Net;
 using DreamChip.AnimalTracking.Application.Dto.Account;
 using DreamChip.AnimalTracking.Application.Services;
-using LanguageExt;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DreamChip.AnimalTracking.WebApi.Controllers;

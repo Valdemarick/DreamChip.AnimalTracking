@@ -33,4 +33,55 @@ public sealed class AnimalTypeService : IAnimalTypeService
 
         return animalTypeDto;
     }
+
+    public async Task<Result<AnimalTypeDto>> CreateAsync(CreateAnimalTypeDto dto)
+    {
+        var animalType = await _animalTypeRepository.GetByName(dto.Type);
+        if (animalType is not null)
+        {
+            var exception = new AnimalTypeWithSuchNameAlreadyExistsException();
+
+            return new Result<AnimalTypeDto>(exception);
+        }
+
+        animalType = _mapper.Map<AnimalType>(animalType);
+
+        var id = await _animalTypeRepository.CreateAsync(animalType);
+        animalType.Id = id;
+
+        var animalTypeDto = _mapper.Map<AnimalTypeDto>(animalType);
+
+        return animalTypeDto;
+    }
+
+    public async Task<Result<AnimalTypeDto>> UpdateAsync(long id, UpdateAnimalTypeDto dto)
+    {
+        var animalType = await _animalTypeRepository.GetByIdAsync(id);
+        if (animalType is null)
+        {
+            var exception = new AnimalTypeNotFoundException();
+
+            return new Result<AnimalTypeDto>(exception);
+        }
+
+        animalType = await _animalTypeRepository.GetByName(dto.Type);
+        if (animalType is not null)
+        {
+            var exception = new AnimalTypeWithSuchNameAlreadyExistsException();
+
+            return new Result<AnimalTypeDto>(exception);
+        }
+
+        animalType = new AnimalType()
+        {
+            Id = id,
+            Type = dto.Type
+        };
+
+        await _animalTypeRepository.UpdateAsync(animalType);
+
+        var animalTypeDto = _mapper.Map<AnimalTypeDto>(animalType);
+
+        return new Result<AnimalTypeDto>(animalTypeDto);
+    }
 }

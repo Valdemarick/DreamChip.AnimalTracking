@@ -9,5 +9,9 @@ public sealed class AnimalTypeProfile : Profile
     public AnimalTypeProfile()
     {
         CreateMap<AnimalType, AnimalTypeDto>();
+
+        CreateMap<CreateAnimalTypeDto, AnimalType>()
+            .ForMember(dest => dest.Id,
+                opt => opt.Ignore());
     }
 }
