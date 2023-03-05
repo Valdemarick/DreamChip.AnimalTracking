@@ -8,4 +8,5 @@ public interface IAnimalTypeRepository
     Task<AnimalType?> GetByName(string type);
     Task<long> CreateAsync(AnimalType animalType);
     Task UpdateAsync(AnimalType animalType);
+    Task DeleteAsync(long id);
 }

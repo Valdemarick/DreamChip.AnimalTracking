@@ -16,26 +16,25 @@ public sealed class LocationRepository : BaseRepository, ILocationRepository
     public async Task<Location?> GetByIdAsync(long id)
     {
         var sql = $@"SELECT {GetLocationColumns("l")},
-                            {GetAnimalVisitedLocationColumns("avl")},
-                            {GetAnimalColumns("a")}
+                            {GetAnimalVisitedLocationColumns("avl")}
                      FROM public.location l
-                     LEFT JOIN public.animal_visited_location avl ON l.id = avl.location_id
-                     LEFT JOIN animal a ON avl.animal_id = a.id
+                     LEFT JOIN public.animal_visited_location avl ON avl.location_id = l.id
                      WHERE l.id = @id";
 
         var connection = await OpenConnection();
 
-        return (await connection.QueryAsync<Location, AnimalVisitedLocation, Animal, Location?>(
+        return (await connection.QueryAsync<Location?, AnimalVisitedLocation?, Location?>(
                 sql,
-                (location, animalVisitedLocation, animal) =>
+                (location, animalVisitedLocation) =>
                 {
-                    animal?.AnimalVisitedLocations.Add(animalVisitedLocation);
-                    location?.AnimalVisitedLocations.Add(animalVisitedLocation);
+                    if (animalVisitedLocation is not null)
+                    {
+                        location?.AnimalVisitedLocations.Add(animalVisitedLocation);
+                    }
 
                     return location;
-                }, 
-                new { id },
-                splitOn: "location_id, id"))
+                },
+                new { id }))
             .AsQueryable()
             .FirstOrDefault();
     }
@@ -99,7 +98,7 @@ public sealed class LocationRepository : BaseRepository, ILocationRepository
     {
         var alias = tableName is not null ? $"{tableName}." : null; 
         
-        return $"{alias}animal_id, {alias}location_id";
+        return $"{alias}id, {alias}location_id, {alias}animal_id";
     }
 
     private string GetLocationColumns(string? tableName = null)

@@ -52,4 +52,18 @@ public sealed class AnimalTypesController : BaseController
 
         return GetResponseFromResult(result, HttpStatusCode.OK);
     }
+
+    [HttpDelete("{id:long}")]
+    [ServiceFilter(typeof(AuthorizationFilter))]
+    public async Task<IActionResult> DeleteAsync([FromRoute] long id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
+        var result = await _animalTypeService.DeleteAsync(id);
+
+        return GetResponseFromResult(result, HttpStatusCode.OK);
+    }
 }

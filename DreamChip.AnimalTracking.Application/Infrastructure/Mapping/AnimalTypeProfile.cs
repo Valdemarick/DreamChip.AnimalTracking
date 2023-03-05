@@ -13,5 +13,9 @@ public sealed class AnimalTypeProfile : Profile
         CreateMap<CreateAnimalTypeDto, AnimalType>()
             .ForMember(dest => dest.Id,
                 opt => opt.Ignore());
+
+        CreateMap<UpdateAnimalTypeDto, AnimalTypeDto>()
+            .ForMember(dest => dest.Id,
+                opt => opt.Ignore());
     }
 }

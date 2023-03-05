@@ -58,4 +58,13 @@ public sealed class AnimalTypeRepository : BaseRepository, IAnimalTypeRepository
             type = animalType.Type
         });
     }
+
+    public async Task DeleteAsync(long id)
+    {
+        var sql = @"DELETE FROM public.animal_type
+                    WHERE id = @id";
+
+        var connection = await OpenConnection();
+        await connection.ExecuteAsync(sql, new { id });
+    }
 }

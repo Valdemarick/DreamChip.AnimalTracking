@@ -44,7 +44,7 @@ public sealed class AnimalTypeService : IAnimalTypeService
             return new Result<AnimalTypeDto>(exception);
         }
 
-        animalType = _mapper.Map<AnimalType>(animalType);
+        animalType = _mapper.Map<AnimalType>(dto);
 
         var id = await _animalTypeRepository.CreateAsync(animalType);
         animalType.Id = id;
@@ -83,5 +83,27 @@ public sealed class AnimalTypeService : IAnimalTypeService
         var animalTypeDto = _mapper.Map<AnimalTypeDto>(animalType);
 
         return new Result<AnimalTypeDto>(animalTypeDto);
+    }
+
+    public async Task<Result<AnimalTypeDto>> DeleteAsync(long id)
+    {
+        var animalType = await _animalTypeRepository.GetByIdAsync(id);
+        if (animalType is null)
+        {
+            var exception = new AnimalTypeNotFoundException();
+
+            return new Result<AnimalTypeDto>(exception);
+        }
+
+        if (animalType.Animals.Count > 0)
+        {
+            var exception = new AnimalTypeLinkedWithAnimalException();
+
+            return new Result<AnimalTypeDto>(exception);
+        }
+
+        await _animalTypeRepository.DeleteAsync(id);
+
+        return new Result<AnimalTypeDto>(new AnimalTypeDto());
     }
 }

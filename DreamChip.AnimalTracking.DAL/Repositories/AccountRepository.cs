@@ -28,7 +28,10 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
         var account = (await connection.QueryAsync<Account, Animal, Account>(sql,
             (account, animal) =>
             {
-                account.Animals.Add(animal);
+                if (animal is not null)
+                {
+                    account.Animals.Add(animal);
+                }
 
                 return account;
             }, 

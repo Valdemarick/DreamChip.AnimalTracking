@@ -12,7 +12,6 @@ public sealed class AnimalVisitedLocation : BaseEntity<long>
     /// </summary>
     public AnimalVisitedLocation()
     {
-        DateTimeOfVisitLocationPoint = DateTime.Now;
     }
 
     /// <summary>
