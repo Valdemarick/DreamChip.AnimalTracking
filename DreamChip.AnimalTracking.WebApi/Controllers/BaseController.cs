@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using DreamChip.AnimalTracking.Domain.Exceptions.Account;
+using DreamChip.AnimalTracking.Domain.Exceptions.Animal;
 using DreamChip.AnimalTracking.Domain.Exceptions.AnimalType;
 using DreamChip.AnimalTracking.Domain.Exceptions.Location;
 using LanguageExt.Common;
@@ -24,6 +25,7 @@ public abstract class BaseController : ControllerBase
         typeof(AccountNotFoundException),
         typeof(LocationNotFoundException),
         typeof(AnimalTypeNotFoundException),
+        typeof(AnimalNotFoundException),
     };
     
     private static readonly List<Type> ConflictExceptionTypes = new List<Type>

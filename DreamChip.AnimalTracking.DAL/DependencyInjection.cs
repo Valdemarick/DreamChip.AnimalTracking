@@ -25,7 +25,8 @@ public static class DependencyInjection
 
         services.AddScoped<IAccountRepository, AccountRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
-            .AddScoped<IAnimalTypeRepository, AnimalTypeRepository>();
+            .AddScoped<IAnimalTypeRepository, AnimalTypeRepository>()
+            .AddScoped<IAnimalRepository, AnimalRepository>();
 
         return services;
     }

@@ -19,7 +19,8 @@ public static class DependencyInjection
 
         services.AddScoped<AccountService>()
             .AddScoped<LocationService>()
-            .AddScoped<IAnimalTypeService, AnimalTypeService>();
+            .AddScoped<IAnimalTypeService, AnimalTypeService>()
+            .AddScoped<IAnimalService, AnimalService>();
 
         return services;
     }
