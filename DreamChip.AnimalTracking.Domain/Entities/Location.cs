@@ -28,5 +28,8 @@ public sealed class Location : BaseEntity<long>
     /// </summary>
     public List<AnimalVisitedLocation> AnimalVisitedLocations { get; set; }
 
-    public ChippingLocation ChippingLocations { get; set; }
+    /// <summary>
+    /// Locations, where animals were chipped.
+    /// </summary>
+    public List<ChippingLocation> ChippingLocations { get; set; }
 }

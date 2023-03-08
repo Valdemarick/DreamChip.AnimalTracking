@@ -48,22 +48,10 @@ public sealed class Animal : BaseEntity<long>
     public required int ChipperId { get; set; }
 
     /// <summary>
-    /// Identifier of the animal's location point.
-    /// </summary>
-    [Column("chipping_location_id")]
-    public required long ChippingLocationId { get; set; }
-
-    /// <summary>
     /// Animal life status. By default Alive.
     /// </summary>
     [Column("life_status")]
     public required LifeStatus LifeStatus { get; set; }
-
-    /// <summary>
-    /// Date time when the animal was chipped.
-    /// </summary>
-    [Column("chipping_date_time")]
-    public required DateTime ChippingDateTime { get; set; }
 
     /// <summary>
     /// Date time when the animal died.
@@ -71,6 +59,11 @@ public sealed class Animal : BaseEntity<long>
     [Column("death_date_time")]
     public DateTime? DeathDatetime { get; set; }
 
+    /// <summary>
+    /// The location where the animal was chipped.
+    /// </summary>
+    public AnimalChippingLocation ChippingLocation { get; set; }
+    
     /// <summary>
     /// Animal types.
     /// </summary>

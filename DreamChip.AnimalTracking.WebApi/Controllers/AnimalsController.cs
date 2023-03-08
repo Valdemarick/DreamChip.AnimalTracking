@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using DreamChip.AnimalTracking.Application.Abstractions.Services;
+using DreamChip.AnimalTracking.Application.Dto.Animal;
 using DreamChip.AnimalTracking.WebApi.Filters;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ public sealed class AnimalsController : BaseController
     }
 
     [HttpGet("{id:long}")]
-    public async Task<IActionResult>? GetByIdAsync([FromRoute] long id)
+    public async Task<IActionResult> GetByIdAsync([FromRoute] long id)
     {
         if (id <= 0)
         {
@@ -25,6 +26,14 @@ public sealed class AnimalsController : BaseController
         }
 
         var result = await _animalService.GetByIdAsync(id);
+
+        return GetResponseFromResult(result, HttpStatusCode.OK);
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> GetPageAsync([FromQuery] AnimalPageRequestDto dto)
+    {
+        var result = await _animalService.GetPageAsync(dto);
 
         return GetResponseFromResult(result, HttpStatusCode.OK);
     }
