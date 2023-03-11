@@ -37,4 +37,13 @@ public sealed class AnimalsController : BaseController
 
         return GetResponseFromResult(result, HttpStatusCode.OK);
     }
+
+    [HttpPost]
+    [ServiceFilter(typeof(AuthorizationFilter))]
+    public async Task<IActionResult> CreateAsync([FromBody] CreateAnimalDto dto)
+    {
+        var result = await _animalService.CreateAsync(dto);
+
+        return GetResponseFromResult(result, HttpStatusCode.Created);
+    }
 }

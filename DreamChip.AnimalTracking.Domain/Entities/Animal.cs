@@ -63,7 +63,7 @@ public sealed class Animal : BaseEntity<long>
     /// The location where the animal was chipped.
     /// </summary>
     public AnimalChippingLocation ChippingLocation { get; set; }
-    
+
     /// <summary>
     /// Animal types.
     /// </summary>

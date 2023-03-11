@@ -7,4 +7,5 @@ public interface IAnimalRepository
 {
     Task<Animal?> GetByIdAsync(long id);
     Task<List<Animal>> GetPageAsync(AnimalPageRequest request);
+    Task<long> CreateAsync(Animal animal);
 }

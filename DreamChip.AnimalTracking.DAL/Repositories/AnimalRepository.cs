@@ -109,6 +109,60 @@ public sealed class AnimalRepository : BaseRepository, IAnimalRepository
             .ToList();
     }
 
+    public async Task<long> CreateAsync(Animal animal)
+    {
+        var firstInsertSql = @"INSERT INTO public.animal(weight, length, height, gender, chipper_id, life_status)
+                               VALUES(@weight, @length, @height, @gender, @chipperId, @lifeStatus)
+                               RETURNING @id";
+        
+        var secondInsertSql = @"INSERT INTO public.animal_chipping_location(animal_id, location_id)
+                                VALUES(@animalId, @locationId)";
+
+        var thirdInsertSql = @"INSERT INTO public.animal_type_animal(animal_id, animal_type_id)
+                               VALUES(@animalId, @animalTypeId)";
+
+        var connection = await OpenConnection();
+        using var transaction = connection.BeginTransaction();
+
+        long animalId = 0;
+        
+        try
+        {
+            animalId = await connection.ExecuteScalarAsync<long>(firstInsertSql, new
+            {
+                weight = animal.Weight,
+                length = animal.Length,
+                height = animal.Height,
+                gender = animal.Gender,
+                chipperid = animal.ChipperId,
+                lifeStatus = animal.LifeStatus
+            }, transaction);
+
+            await connection.ExecuteAsync(secondInsertSql, new
+            {
+                animalId = animalId,
+                locationId = animal.ChippingLocation.Id
+            }, transaction);
+
+            foreach (var animalType in animal.AnimalTypes)
+            {
+                await connection.ExecuteAsync(thirdInsertSql, new
+                {
+                    animalId = animalId,
+                    animalTypeId = animalType.Id
+                }, transaction);
+            }
+        }
+        catch
+        {
+            transaction.Rollback();
+        }
+        
+        transaction.Commit();
+        
+        return animalId;
+    }
+
     private string GetAnimalColumns(string? tableName = null)
     {
         var alias = tableName is not null ? $"{tableName}." : null;

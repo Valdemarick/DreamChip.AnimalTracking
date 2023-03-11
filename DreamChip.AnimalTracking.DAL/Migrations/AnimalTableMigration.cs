@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using DreamChip.AnimalTracking.Domain.Enums;
+using FluentMigrator;
 
 namespace DreamChip.AnimalTracking.DAL.Migrations;
 
@@ -15,7 +16,7 @@ public sealed class AnimalTableMigration : Migration
                 .WithColumn("weight").AsFloat().NotNullable()
                 .WithColumn("height").AsFloat().NotNullable()
                 .WithColumn("gender").AsInt16().NotNullable()
-                .WithColumn("life_status").AsInt16().NotNullable()
+                .WithColumn("life_status").AsInt16().NotNullable().WithDefaultValue(LifeStatus.Alive)
                 .WithColumn("chipper_id").AsInt32().NotNullable()
                 .WithColumn("death_date_time").AsDateTime().Nullable();
         }

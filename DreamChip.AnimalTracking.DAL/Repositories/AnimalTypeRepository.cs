@@ -21,7 +21,18 @@ public sealed class AnimalTypeRepository : BaseRepository, IAnimalTypeRepository
 
         return await connection.QueryFirstOrDefaultAsync<AnimalType>(sql, new { id });
     }
-    
+
+    public async Task<List<AnimalType>> GetByIdsAsync(List<long> ids)
+    {
+        var sql = @"SELECT id, type
+                    FROM public.animal_type
+                    WHERE id = ANY(@ids)";
+
+        var connection = await OpenConnection();
+
+        return (await connection.QueryAsync<AnimalType>(sql, new { ids })).ToList();
+    }
+
     public async Task<AnimalType?> GetByName(string type)
     {
         var sql = @"SELECT id, type

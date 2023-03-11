@@ -16,6 +16,15 @@ public sealed class AnimalType : BaseEntity<long>
     }
 
     /// <summary>
+    /// Constructor for AutoMapper.
+    /// </summary>
+    /// <param name="id">Animal type identifier.</param>
+    public AnimalType(long id) : base()
+    {
+        Id = id;
+    }
+
+    /// <summary>
     /// Type name.
     /// </summary>
     [Column("type")]
