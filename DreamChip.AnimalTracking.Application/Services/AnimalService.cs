@@ -101,4 +101,52 @@ public sealed class AnimalService : IAnimalService
 
         return new Result<AnimalDto>(animalDto);
     }
+
+    public async Task<Result<AnimalDto>> AddTypeAsync(long animalId, long typeId)
+    {
+        var animal = await _animalRepository.GetByIdAsync(animalId);
+        if (animal is null)
+        {
+            var exception = new AnimalNotFoundException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        var type = await _animalTypeRepository.GetByIdAsync(typeId);
+        if (type is null)
+        {
+            var exception = new AnimalTypeNotFoundException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        await _animalRepository.AddTypeAsync(animalId, typeId);
+        animal = await _animalRepository.GetByIdAsync(animalId);
+
+        var animalDto = _mapper.Map<AnimalDto>(animal);
+
+        return animalDto;
+    }
+
+    public async Task<Result<AnimalDto>> DeleteAsync(long id)
+    {
+        var animal = await _animalRepository.GetByIdAsync(id);
+        if (animal is null)
+        {
+            var exception = new AnimalNotFoundException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        if (animal.AnimalVisitedLocations.Count > 0)
+        {
+            var exception = new AnimalLeftChippingLocationException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        await _animalRepository.DeleteAsync(id);
+
+        return new Result<AnimalDto>(new AnimalDto());
+    }
 }

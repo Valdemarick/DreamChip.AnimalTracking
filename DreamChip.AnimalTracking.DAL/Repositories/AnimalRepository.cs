@@ -43,38 +43,49 @@ public sealed class AnimalRepository : BaseRepository<Animal, long>, IAnimalRepo
             .LeftJoin(TableName, animalVisitedLocation.TableName, "Id", "AnimalId")
             .LeftJoinSubQuery(TableName, $"({subQuery})", alias, "Id", "AnimalId")
             .LeftJoin(TableName, animalChippingLocation.TableName, "Id", "AnimalId")
-            .Where($"\"{TableName}\".\"Id\" = @id")
+            .Where($"\"{TableName}\".\"Id\" = @Id")
             .ToString();
+
+        var dict = new Dictionary<long, Animal>();
         
         var connection = await OpenConnection();
 
-        var animal = (await connection.QueryAsync<Animal, AnimalVisitedLocation, AnimalType, AnimalChippingLocation, Animal>(
+        var rows =
+            (await connection.QueryAsync<Animal, AnimalVisitedLocation, AnimalType, AnimalChippingLocation, Animal>(
                 sql, (animal, animalVisitedLocation, animalType, animalChippingLocation) =>
                 {
-                    if (animalVisitedLocation is not null)
+                    Animal entry;
+
+                    if (!dict.TryGetValue(id, out entry))
                     {
-                        animal.AnimalVisitedLocations.Add(animalVisitedLocation);
+                        entry = animal;
+                        dict.Add(id, animal);
                     }
 
                     if (animalType is not null)
                     {
-                        animal.AnimalTypes.Add(animalType);
+                        entry.AnimalTypes.Add(animalType);
+                    }
+
+                    if (animalVisitedLocation is not null)
+                    {
+                        entry.AnimalVisitedLocations.Add(animalVisitedLocation);
                     }
 
                     if (animalChippingLocation is not null)
                     {
-                        animal.ChippingLocation = animalChippingLocation;
+                        entry.ChippingLocation = animalChippingLocation;
                     }
 
-                    return animal;
+                    return entry;
                 },
                 new { id }))
             .AsQueryable()
             .FirstOrDefault();
-        
+
         connection.Close();
 
-        return animal;
+        return rows;
     }
 
     public async Task<List<Animal>> GetPageAsync(AnimalPageRequest request)
@@ -109,27 +120,37 @@ public sealed class AnimalRepository : BaseRepository<Animal, long>, IAnimalRepo
             .Offset(request.From, request.Size)
             .ToString();
 
+        var dict = new Dictionary<long, Animal>();
+        
         var connection = await OpenConnection();
 
         var animals = (await connection.QueryAsync<Animal, AnimalVisitedLocation, AnimalType, AnimalChippingLocation, Animal>(
                 sql, (animal, animalVisitedLocation, animalType, animalChippingLocation) =>
                 {
-                    if (animalVisitedLocation is not null)
+                    Animal entry;
+
+                    if (!dict.TryGetValue(animal.Id, out entry))
                     {
-                        animal.AnimalVisitedLocations.Add(animalVisitedLocation);
+                        entry = animal;
+                        dict.Add(animal.Id, animal);
                     }
 
                     if (animalType is not null)
                     {
-                        animal.AnimalTypes.Add(animalType);
+                        entry.AnimalTypes.Add(animalType);
+                    }
+
+                    if (animalVisitedLocation is not null)
+                    {
+                        entry.AnimalVisitedLocations.Add(animalVisitedLocation);
                     }
 
                     if (animalChippingLocation is not null)
                     {
-                        animal.ChippingLocation = animalChippingLocation;
+                        entry.ChippingLocation = animalChippingLocation;
                     }
 
-                    return animal;
+                    return entry;
                 },
                 new
                 {
@@ -148,6 +169,23 @@ public sealed class AnimalRepository : BaseRepository<Animal, long>, IAnimalRepo
         connection.Close();
 
         return animals;
+    }
+
+    public async Task AddTypeAsync(long animalId, long typeId)
+    {
+        var sql = new StringBuilder()
+            .Insert(AnimalTypeAnimalTableMetadata.TableName, AnimalTypeAnimalTableMetadata.Columns)
+            .ToString();
+
+        var connection = await OpenConnection();
+
+        await connection.ExecuteAsync(sql, new
+        {
+            animalId = animalId,
+            animalTypeId = typeId
+        });
+        
+        connection.Close();
     }
 
     public override async Task<long> CreateAsync(Animal animal)
@@ -204,42 +242,46 @@ public sealed class AnimalRepository : BaseRepository<Animal, long>, IAnimalRepo
         return animalId;
     }
 
-    private string GetAnimalColumns(string? tableName = null)
+    public override async Task DeleteAsync(long id)
     {
-        var alias = tableName is not null ? $"{tableName}." : null;
+        var firstDeleteStatement = new StringBuilder()
+            .Delete(TableName)
+            .Where($"\"{TableName}\".\"Id\" = @Id")
+            .ToString();
 
-        return $"{alias}id, {alias}weight, {alias}length, {alias}height, {alias}gender, {alias}chipper_id," +
-               $"{alias}life_status, {alias}death_date_time";
+        var secondDeleteStatement = new StringBuilder()
+            .Delete(AnimalChippingLocationTableMetadata.TableName)
+            .Where($"\"{AnimalChippingLocationTableMetadata.TableName}\".\"AnimalId\" = @AnimalId")
+            .ToString();
+
+        var thirdDeleteStatement = new StringBuilder()
+            .Delete(AnimalTypeAnimalTableMetadata.TableName)
+            .Where($"\"{AnimalTypeAnimalTableMetadata.TableName}\".\"AnimalId\" = @AnimalId")
+            .ToString();
+
+        var connection = await OpenConnection();
+        using var transaction = connection.BeginTransaction();
+
+        try
+        {
+            await connection.ExecuteAsync(firstDeleteStatement, new { id });
+
+            await connection.ExecuteAsync(secondDeleteStatement, new { animalId = id });
+
+            await connection.ExecuteAsync(thirdDeleteStatement, new { animalId = id });
+        }
+        catch
+        {
+            transaction.Rollback();
+
+            throw;
+        }
+        
+        transaction.Commit();
+        
+        connection.Close();
     }
 
-    private string GetAnimalVisitedLocationColumns(string? tableName = null)
-    {
-        var alias = tableName is not null ? $"{tableName}." : null;
-
-        return $"{alias}location_id, {alias}animal_id";
-    }
-
-    private string GetAnimalTypeAnimalColumns(string? tableName = null)
-    {
-        var alias = tableName is not null ? $"{tableName}." : null;
-
-        return $"{alias}animal_type_id, {alias}animal_id";
-    }
-
-    private string GetAnimalTypeColumns(string? tableName = null)
-    {
-        var alias = tableName is not null ? $"{tableName}." : null;
-
-        return $"{alias}id";
-    }
-
-    private string GetAnimalChippingLocationColumns(string? tableName = null)
-    {
-        var alias = tableName is not null ? $"{tableName}." : null;
-
-        return $"{alias}animal_id, {alias}location_id, {alias}chipping_date_time";
-    }
-    
     private IEnumerable<string> CreateAnimalPageFilter(AnimalPageRequest request)
     {
         var filterConditions = new List<string>();

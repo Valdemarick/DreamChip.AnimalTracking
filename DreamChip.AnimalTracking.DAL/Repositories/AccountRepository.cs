@@ -27,13 +27,22 @@ public sealed class AccountRepository : BaseRepository<Account, int>, IAccountRe
             .LeftJoin(TableName, AnimalTableMetadata.TableName, "Id", "ChipperId")
             .Where(new []{ $"\"{TableName}\".\"Id\" = @Id"})
             .ToString();
-            
+
+        var dict = new Dictionary<int, Account>();
         
         var connection = await OpenConnection();
     
         var account = (await connection.QueryAsync<Account, Animal, Account>(sql,
-            (account, animal) => 
+            (account, animal) =>
             {
+                Account entry;
+
+                if (!dict.TryGetValue(id, out entry))
+                {
+                    entry = account;
+                    dict.Add(id ,entry);
+                }
+                
                 if (animal is not null)
                 {
                     account.Animals.Add(animal);

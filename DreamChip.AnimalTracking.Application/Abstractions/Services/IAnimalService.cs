@@ -10,4 +10,8 @@ public interface IAnimalService
     Task<Result<List<AnimalDto>>> GetPageAsync(AnimalPageRequestDto dto);
 
     Task<Result<AnimalDto>> CreateAsync(CreateAnimalDto dto);
+
+    Task<Result<AnimalDto>> AddTypeAsync(long animalId, long typeId);
+
+    Task<Result<AnimalDto>> DeleteAsync(long id);
 }

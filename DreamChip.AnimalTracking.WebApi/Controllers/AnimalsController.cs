@@ -46,4 +46,32 @@ public sealed class AnimalsController : BaseController
 
         return GetResponseFromResult(result, HttpStatusCode.Created);
     }
+
+    [HttpPost("{animalId:long}/types/{typeId:long}")]
+    [ServiceFilter(typeof(AuthorizationFilter))]
+    public async Task<IActionResult> AddTypeAsync([FromRoute] long animalId, [FromRoute] long typeId)
+    {
+        if (animalId <= 0 || typeId <= 0)
+        {
+            return BadRequest();
+        }
+
+        var result = await _animalService.AddTypeAsync(animalId, typeId);
+
+        return GetResponseFromResult(result, HttpStatusCode.Created);
+    }
+
+    [HttpDelete("{id:long}")]
+    [ServiceFilter(typeof(AuthorizationFilter))]
+    public async Task<IActionResult> DeleteAsync([FromRoute] long id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
+        var result = await _animalService.DeleteAsync(id);
+
+        return GetResponseFromResult(result, HttpStatusCode.OK);
+    }
 }

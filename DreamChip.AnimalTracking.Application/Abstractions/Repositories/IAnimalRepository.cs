@@ -6,4 +6,5 @@ namespace DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 public interface IAnimalRepository : IBaseRepository<Animal, long>
 {
     Task<List<Animal>> GetPageAsync(AnimalPageRequest request);
+    Task AddTypeAsync(long animalId, long typeId);
 }
