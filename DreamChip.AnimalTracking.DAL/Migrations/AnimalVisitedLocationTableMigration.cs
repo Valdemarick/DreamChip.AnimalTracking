@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using DreamChip.AnimalTracking.Domain.Entities;
+using FluentMigrator;
 
 namespace DreamChip.AnimalTracking.DAL.Migrations;
 
@@ -7,19 +8,21 @@ public sealed class AnimalVisitedLocationTableMigration : Migration
 {
     public override void Up()
     {
-        if (!Schema.Table("animal_visited_location").Exists())
+        if (!Schema.Table(nameof(AnimalVisitedLocation)).Exists())
         {
-            Create.Table("animal_visited_location")
-                .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("date_time_of_visit_location_point").AsDateTime().NotNullable()
-                .WithDefault(SystemMethods.CurrentDateTime)
-                .WithColumn("animal_id").AsInt64().NotNullable()
-                .WithColumn("location_id").AsInt64().Nullable();
+            Create.Table(nameof(AnimalVisitedLocation))
+                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithColumn("DateTimeOfVisitLocation").AsDateTime().NotNullable()
+                .WithColumn("AnimalId").AsInt64().NotNullable()
+                .WithColumn("LocationId").AsInt64().Nullable();
         }
     }
 
     public override void Down()
     {
-        Delete.Table("animal_visited_location");
+        if (Schema.Table(nameof(AnimalVisitedLocation)).Exists())
+        {
+            Delete.Table(nameof(AnimalVisitedLocation));
+        }
     }
 }

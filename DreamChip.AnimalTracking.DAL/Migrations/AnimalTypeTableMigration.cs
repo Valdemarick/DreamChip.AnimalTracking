@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using DreamChip.AnimalTracking.Domain.Entities;
+using FluentMigrator;
 
 namespace DreamChip.AnimalTracking.DAL.Migrations;
 
@@ -7,16 +8,19 @@ public sealed class AnimalTypeTableMigration : Migration
 {
     public override void Up()
     {
-        if (!Schema.Table("animal_type").Exists())
+        if (!Schema.Table(nameof(AnimalType)).Exists())
         {
-            Create.Table("animal_type")
-                .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("type").AsString().NotNullable().Unique();
+            Create.Table(nameof(AnimalType))
+                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithColumn("Type").AsString().NotNullable().Unique();
         }
     }
 
     public override void Down()
     {
-        Delete.Table("animal");
+        if (Schema.Table(nameof(AnimalType)).Exists())
+        {
+            Delete.Table(nameof(AnimalType));
+        }
     }
 }

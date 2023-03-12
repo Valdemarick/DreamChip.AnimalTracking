@@ -1,71 +1,83 @@
-﻿using Dapper;
+﻿using System.Text;
+using Dapper;
 using DreamChip.AnimalTracking.Application.Abstractions.Repositories;
+using DreamChip.AnimalTracking.DAL.Extensions;
+using DreamChip.AnimalTracking.DAL.RepositoryMetadata;
 using DreamChip.AnimalTracking.Domain.Entities;
 using DreamChip.AnimalTracking.Domain.ValueObjects.Account;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
 
 namespace DreamChip.AnimalTracking.DAL.Repositories;
 
-public sealed class AccountRepository : BaseRepository, IAccountRepository
+public sealed class AccountRepository : BaseRepository<Account, int>, IAccountRepository
 {
-    private readonly string[] _columns = { "id", "first_name", "last_name", "email", "password" };
-
     public AccountRepository(IConfiguration configuration) : base(configuration)
     {
     }
 
-    public async Task<Account?> GetByIdAsync(int id)
+    protected override string TableName { get; set; } = nameof(Account);
+    protected override string[] Columns { get; set; } = { "Id", "FirstName", "LastName", "Email", "Password" };
+    
+    public override async Task<Account?> GetByIdAsync(int id)
     {
-        var sql = $@"SELECT {GetAccountColumns("acc")},
-                            {GetAnimalColumns("an")}
-                     FROM public.account acc
-                     LEFT JOIN public.animal an ON an.chipper_id = acc.id
-                     WHERE acc.id = @id";
-
+        var sql = new StringBuilder()
+            .Select(TableName, Columns)
+            .AddColumns(AnimalTableMetadata.TableName, AnimalTableMetadata.Columns)
+            .From(TableName)
+            .LeftJoin(TableName, AnimalTableMetadata.TableName, "Id", "ChipperId")
+            .Where(new []{ $"\"{TableName}\".\"Id\" = @Id"})
+            .ToString();
+            
+        
         var connection = await OpenConnection();
-
+    
         var account = (await connection.QueryAsync<Account, Animal, Account>(sql,
-            (account, animal) =>
+            (account, animal) => 
             {
                 if (animal is not null)
                 {
                     account.Animals.Add(animal);
                 }
-
+    
                 return account;
             }, 
         new { id }))
             .AsQueryable()
             .FirstOrDefault();
-
+        
+        connection.Close();
+    
         return account;
     }
 
     public async Task<Account?> GetByEmailAsync(string? email)
     {
-        var sql = @$"SELECT {string.Join(',', _columns)}
-                    FROM public.account
-                    WHERE email = @email";
+        var builder = new StringBuilder()
+            .Select(TableName, Columns)
+            .From(TableName)
+            .Where(new[] { "\"Email\" = @Email" });
 
         var connection = await OpenConnection();
 
-        var account = await connection.QueryFirstOrDefaultAsync<Account>(sql, new { email });
+        var account = await connection.QueryFirstOrDefaultAsync<Account>(builder.ToString(), new { email });
+        
+        connection.Close();
 
         return account;
     }
 
     public async Task<List<Account>> GetPageAsync(AccountPageRequest request)
     {
-        var sql = $@"SELECT {string.Join(',', _columns)}
-                     FROM public.account";
+        var filter = CreateAccountPageFilters(request).ToList();
 
-        var filter = CreateAccountPageFilter(request);
-
-        sql += $@"{filter}
-                   ORDER BY id
-                   OFFSET @from ROWS FETCH NEXT @size ROWS ONLY";
-
+        var sql = new StringBuilder()
+            .Select(TableName, Columns)
+            .From(TableName)
+            .Where(filter)
+            .OrderByAscending("\"Id\"")
+            .Offset(request.From, request.Size)
+            .ToString();
+        
         var connection = await OpenConnection();
 
         var accounts = await connection.QueryAsync<Account>(sql, new
@@ -76,86 +88,31 @@ public sealed class AccountRepository : BaseRepository, IAccountRepository
             from = request.From,
             size = request.Size
         });
+        
+        connection.Close();
 
         return accounts.ToList();
     }
 
-    public async Task<int> CreateAsync(Account account)
-    {
-        var sql = @$"INSERT INTO public.account (first_name, last_name, email, password)
-                    VALUES (@FirstName, @LastName, @Email, @Password)
-                    RETURNING id";
-
-        var connection = await OpenConnection();
-        using var transaction = connection.BeginTransaction();
-        await using var command = new NpgsqlCommand(sql);
-
-        var id = await connection.ExecuteScalarAsync<int>(command.CommandText, account);
-
-        transaction.Commit();
-
-        return id;
-    }
-
-    public async Task<Account> UpdateAsync(Account account)
-    {
-        var sql = @"UPDATE public.account
-                    SET first_name = @firstName, last_name = @lastName, email = @email, password = @password
-                    WHERE id = @id";
-
-        var connection = await OpenConnection();
-        await connection.ExecuteAsync(sql, new
-        {
-            id = account.Id,
-            firstName = account.FirstName,
-            lastName = account.LastName,
-            email = account.Email,
-            password = account.Password
-        });
-
-        return account;
-    }
-
-    public async Task DeleteAsync(int id)
-    {
-        var sql = @"DELETE FROM public.account
-                    WHERE id = @id";
-        
-        var connection = await OpenConnection();
-        await connection.ExecuteAsync(sql, new { id });
-    }
-
-    private string? CreateAccountPageFilter(AccountPageRequest request)
+    private IEnumerable<string> CreateAccountPageFilters(AccountPageRequest request)
     {
         var filterConditions = new List<string>();
 
         if (request.LastName != null)
         {
-            filterConditions.Add("lower(last_name) LIKE @lastName");
+            filterConditions.Add("lower(\"LastName\") LIKE @lastName");
         }
 
         if (request.FirstName != null)
         {
-            filterConditions.Add("first_name LIKE @firstName");
+            filterConditions.Add("\"FirstName\" LIKE @firstName");
         }
 
         if (request.Email != null)
         {
-            filterConditions.Add("email LIKE @email");
+            filterConditions.Add("\"Email\" LIKE @email");
         }
 
-        var filter = filterConditions.Any() ? $" WHERE ({string.Join(") AND (", filterConditions)})" : null;
-
-        return filter;
-    }
-
-    private string GetAccountColumns(string alias)
-    {
-        return $@"{alias}.id, {alias}.last_name, {alias}.first_name, {alias}.email";
-    }
-
-    private string GetAnimalColumns(string alias)
-    {
-        return $@"{alias}.id";
+        return filterConditions;
     }
 }

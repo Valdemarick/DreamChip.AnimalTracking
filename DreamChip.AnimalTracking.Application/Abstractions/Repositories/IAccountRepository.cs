@@ -6,15 +6,8 @@ namespace DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 /// <summary>
 /// An interface for Account Repository.
 /// </summary>
-public interface IAccountRepository
+public interface IAccountRepository : IBaseRepository<Account, int>
 {
-    /// <summary>
-    /// Gets an account by its identifier.
-    /// </summary>
-    /// <param name="id">Identifier.</param>
-    /// <returns>Existing account or null.</returns>
-    Task<Account?> GetByIdAsync(int id);
-
     /// <summary>
     /// Returns an account by email.
     /// </summary>
@@ -28,25 +21,4 @@ public interface IAccountRepository
     /// /// <param name="request">Filter parameters.</param>
     /// <returns>Account list.</returns>
     Task<List<Account>> GetPageAsync(AccountPageRequest request);
-
-    /// <summary>
-    /// Creates a new account.
-    /// </summary>
-    /// <param name="account">Account entity.</param>
-    /// <returns>Identifier of created account.</returns>
-    Task<int> CreateAsync(Account account);
-
-    /// <summary>
-    /// Updates the account.
-    /// </summary>
-    /// <param name="account">Account/</param>
-    /// <returns>Updated account.</returns>
-    Task<Account> UpdateAsync(Account account);
-
-    /// <summary>
-    /// Deletes account by idenitifier.
-    /// </summary>
-    /// <param name="id">Account identifier.</param>
-    /// <returns></returns>
-    Task DeleteAsync(int id);
 }

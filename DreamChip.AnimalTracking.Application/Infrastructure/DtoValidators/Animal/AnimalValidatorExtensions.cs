@@ -11,21 +11,21 @@ public static class AnimalValidatorExtensions
     private const string FemaleGender = "female";
     private const string OtherGender = "other";
     
-    public static bool IsDateTimeValidFormat(DateTime dateTime)
+    public static bool IsDateTimeValidFormat(DateTime? dateTime)
     {
-        return dateTime.ToString(CultureInfo.InvariantCulture) 
-               == dateTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz", CultureInfo.InvariantCulture);
+        return dateTime?.ToString(CultureInfo.InvariantCulture) 
+               == dateTime?.ToString("u");
     }
 
-    public static bool IsLifeStatusValid(string lifeStatus)
+    public static bool IsLifeStatusValid(string? lifeStatus)
     {
-        return lifeStatus.ToLower() == AliveStatus || lifeStatus.ToLower() == DeadStatus;
+        return lifeStatus?.ToLower() == AliveStatus || lifeStatus?.ToLower() == DeadStatus;
     }
 
-    public static bool IsGenderValid(string gender)
+    public static bool IsGenderValid(string? gender)
     {
-        return gender.ToLower() == MaleGender
-               || gender.ToLower() == FemaleGender
-               || gender.ToLower() == OtherGender;
+        return gender?.ToLower() == MaleGender
+               || gender?.ToLower() == FemaleGender
+               || gender?.ToLower() == OtherGender;
     }
 }

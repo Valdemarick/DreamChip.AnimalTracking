@@ -1,5 +1,5 @@
 using DreamChip.AnimalTracking.Application;
-using DreamChip.AnimalTracking.DAL;
+using DreamChip.AnimalTracking.DAL.Extensions;
 using DreamChip.AnimalTracking.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);

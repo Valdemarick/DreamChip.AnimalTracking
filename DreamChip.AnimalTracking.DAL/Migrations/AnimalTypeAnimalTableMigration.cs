@@ -7,19 +7,19 @@ public class AnimalTypeAnimalTableMigration : Migration
 {
     public override void Up()
     {
-        if (!Schema.Table("animal_type_animal").Exists())
+        if (!Schema.Table("AnimalTypeAnimal").Exists())
         {
-            Create.Table("animal_type_animal")
-                .WithColumn("animal_type_id").AsInt64().NotNullable()
-                .WithColumn("animal_id").AsInt64().NotNullable();
+            Create.Table("AnimalTypeAnimal")
+                .WithColumn("AnimalTypeId").AsInt64().NotNullable()
+                .WithColumn("AnimalId").AsInt64().NotNullable();
         }
     }
 
     public override void Down()
     {
-        if (Schema.Table("animal_type_animal").Exists())
+        if (Schema.Table("AnimalTypeAnimal").Exists())
         {
-            Delete.Table("animal_type_animal");
+            Delete.Table("AnimalTypeAnimal");
         }
     }
 }

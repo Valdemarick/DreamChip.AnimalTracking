@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
-namespace DreamChip.AnimalTracking.DAL;
+namespace DreamChip.AnimalTracking.DAL.Extensions;
 
 /// <summary>
 /// A static class that's responsible for database creation and data seeding.

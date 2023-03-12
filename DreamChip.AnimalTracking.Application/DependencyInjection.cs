@@ -17,10 +17,10 @@ public static class DependencyInjection
             .AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters();
 
-        services.AddScoped<AccountService>()
-            .AddScoped<LocationService>()
-            .AddScoped<IAnimalTypeService, AnimalTypeService>()
-            .AddScoped<IAnimalService, AnimalService>();
+        services.AddTransient<AccountService>()
+            .AddTransient<LocationService>()
+            .AddTransient<IAnimalTypeService, AnimalTypeService>()
+            .AddTransient<IAnimalService, AnimalService>();
 
         return services;
     }

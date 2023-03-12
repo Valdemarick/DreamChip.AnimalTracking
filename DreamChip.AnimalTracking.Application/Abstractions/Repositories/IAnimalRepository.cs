@@ -3,9 +3,7 @@ using DreamChip.AnimalTracking.Domain.ValueObjects.Animal;
 
 namespace DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 
-public interface IAnimalRepository
+public interface IAnimalRepository : IBaseRepository<Animal, long>
 {
-    Task<Animal?> GetByIdAsync(long id);
     Task<List<Animal>> GetPageAsync(AnimalPageRequest request);
-    Task<long> CreateAsync(Animal animal);
 }

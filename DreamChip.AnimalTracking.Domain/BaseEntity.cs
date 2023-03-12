@@ -11,6 +11,6 @@ public abstract class BaseEntity<TKey>
     /// <summary>
     /// Identifier.
     /// </summary>
-    [Column("id")]
-    public required TKey Id { get; set; }
+    [Column("Id")]
+    public TKey Id { get; set; }
 }

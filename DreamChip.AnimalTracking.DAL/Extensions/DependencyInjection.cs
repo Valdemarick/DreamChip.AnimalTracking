@@ -5,7 +5,7 @@ using System.Reflection;
 using DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 using DreamChip.AnimalTracking.DAL.Repositories;
 
-namespace DreamChip.AnimalTracking.DAL;
+namespace DreamChip.AnimalTracking.DAL.Extensions;
 
 public static class DependencyInjection
 {
@@ -23,10 +23,15 @@ public static class DependencyInjection
                     .All();
             });
 
-        services.AddScoped<IAccountRepository, AccountRepository>()
-            .AddScoped<ILocationRepository, LocationRepository>()
-            .AddScoped<IAnimalTypeRepository, AnimalTypeRepository>()
-            .AddScoped<IAnimalRepository, AnimalRepository>();
+        services.AddTransient<IAccountRepository, AccountRepository>()
+            .AddTransient<ILocationRepository, LocationRepository>()
+            .AddTransient<IAnimalTypeRepository, AnimalTypeRepository>()
+            .AddTransient<IAnimalRepository, AnimalRepository>();
+        
+        DapperExtensions.DapperAsyncExtensions.SetMappingAssemblies(new List<Assembly>()
+        {
+            Assembly.GetExecutingAssembly()
+        });
 
         return services;
     }

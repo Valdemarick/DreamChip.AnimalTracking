@@ -14,17 +14,15 @@ public sealed class AnimalPageRequestDtoValidator : AbstractValidator<AnimalPage
             .GreaterThan(0);
 
         RuleFor(x => x.ChipperId)
-            .GreaterThan(0);
+            .GreaterThan(0).When(x => x.ChipperId is not null);
 
         RuleFor(x => x.ChippingLocationId)
-            .GreaterThan(0);
+            .GreaterThan(0).When(x => x.ChippingLocationId is not null);
 
         RuleFor(x => x.Gender)
-            .NotNull()
-            .Must(AnimalValidatorExtensions.IsGenderValid);
+            .Must(AnimalValidatorExtensions.IsGenderValid).When(x => x.Gender is not null);
 
         RuleFor(x => x.LifeStatus)
-            .NotNull()
-            .Must(AnimalValidatorExtensions.IsLifeStatusValid);
+            .Must(AnimalValidatorExtensions.IsLifeStatusValid).When(x => x.LifeStatus is not null);
     }
 }

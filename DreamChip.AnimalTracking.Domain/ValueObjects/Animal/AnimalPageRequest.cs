@@ -1,18 +1,20 @@
-﻿namespace DreamChip.AnimalTracking.Domain.ValueObjects.Animal;
+﻿using DreamChip.AnimalTracking.Domain.Enums;
+
+namespace DreamChip.AnimalTracking.Domain.ValueObjects.Animal;
 
 public sealed class AnimalPageRequest
 {
-    public DateTime StartDateTime { get; set; }
+    public DateTime? StartDateTime { get; set; }
 
-    public DateTime EndDateTime { get; set; }
+    public DateTime? EndDateTime { get; set; }
     
-    public string Gender { get; set; } = null!;
+    public Gender? Gender { get; set; } = null!;
     
-    public string LifeStatus { get; set; } = null!;
+    public LifeStatus? LifeStatus { get; set; } = null!;
 
-    public int ChipperId { get; set; }
+    public int? ChipperId { get; set; }
     
-    public long ChippingLocationId { get; set; }
+    public long? ChippingLocationId { get; set; }
 
     public int From { get; set; }
 

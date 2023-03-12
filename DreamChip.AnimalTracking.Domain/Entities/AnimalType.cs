@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DreamChip.AnimalTracking.Domain.Entities;
+﻿namespace DreamChip.AnimalTracking.Domain.Entities;
 
 /// <summary>
 /// Animal type entity.
@@ -19,7 +17,7 @@ public sealed class AnimalType : BaseEntity<long>
     /// Constructor for AutoMapper.
     /// </summary>
     /// <param name="id">Animal type identifier.</param>
-    public AnimalType(long id) : base()
+    public AnimalType(long id) : this()
     {
         Id = id;
     }
@@ -27,8 +25,7 @@ public sealed class AnimalType : BaseEntity<long>
     /// <summary>
     /// Type name.
     /// </summary>
-    [Column("type")]
-    public required string Type { get; set; }
+    public string Type { get; set; }
 
     /// <summary>
     /// Animals of this type.

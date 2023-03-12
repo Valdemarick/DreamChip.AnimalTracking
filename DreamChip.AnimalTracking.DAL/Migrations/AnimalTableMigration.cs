@@ -1,4 +1,5 @@
-﻿using DreamChip.AnimalTracking.Domain.Enums;
+﻿using DreamChip.AnimalTracking.Domain.Entities;
+using DreamChip.AnimalTracking.Domain.Enums;
 using FluentMigrator;
 
 namespace DreamChip.AnimalTracking.DAL.Migrations;
@@ -8,22 +9,25 @@ public sealed class AnimalTableMigration : Migration
 {
     public override void Up()
     {
-        if (!Schema.Table("animal").Exists())
+        if (!Schema.Table(nameof(Animal)).Exists())
         {
-            Create.Table("animal")
-                .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("length").AsFloat().NotNullable()
-                .WithColumn("weight").AsFloat().NotNullable()
-                .WithColumn("height").AsFloat().NotNullable()
-                .WithColumn("gender").AsInt16().NotNullable()
-                .WithColumn("life_status").AsInt16().NotNullable().WithDefaultValue(LifeStatus.Alive)
-                .WithColumn("chipper_id").AsInt32().NotNullable()
-                .WithColumn("death_date_time").AsDateTime().Nullable();
+            Create.Table(nameof(Animal))
+                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithColumn("Length").AsFloat().NotNullable()
+                .WithColumn("Weight").AsFloat().NotNullable()
+                .WithColumn("Height").AsFloat().NotNullable()
+                .WithColumn("Gender").AsInt16().NotNullable()
+                .WithColumn("LifeStatus").AsInt16().NotNullable().WithDefaultValue((uint)LifeStatus.Alive)
+                .WithColumn("ChipperId").AsInt32().NotNullable()
+                .WithColumn("DeathDateTime").AsDateTime().Nullable();
         }
     }
 
     public override void Down()
     {
-        Delete.Table("animal");
+        if (Schema.Table(nameof(Animal)).Exists())
+        {
+            Delete.Table(nameof(Animal));
+        }
     }
 }

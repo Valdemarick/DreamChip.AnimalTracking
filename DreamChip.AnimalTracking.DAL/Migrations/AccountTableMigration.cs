@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using DreamChip.AnimalTracking.Domain.Entities;
+using FluentMigrator;
 
 namespace DreamChip.AnimalTracking.DAL.Migrations;
 
@@ -7,19 +8,22 @@ public sealed class AccountTableMigration : Migration
 {
     public override void Up()
     {
-        if (!Schema.Table("account").Exists())
+        if (!Schema.Table(nameof(Account)).Exists())
         {
-            Create.Table("account")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
-                .WithColumn("first_name").AsString().NotNullable()
-                .WithColumn("last_name").AsString().NotNullable()
-                .WithColumn("email").AsString().NotNullable()
-                .WithColumn("password").AsString().NotNullable();
+            Create.Table(nameof(Account))
+                .WithColumn("Id").AsInt32().PrimaryKey().Identity()
+                .WithColumn("FirstName").AsString().NotNullable()
+                .WithColumn("LastName").AsString().NotNullable()
+                .WithColumn("Email").AsString().NotNullable()
+                .WithColumn("Password").AsString().NotNullable();
         }
     }
 
     public override void Down()
     {
-        Delete.Table("account");
+        if (Schema.Table(nameof(Account)).Exists())
+        {
+            Delete.Table(nameof(Account));
+        }
     }
 }

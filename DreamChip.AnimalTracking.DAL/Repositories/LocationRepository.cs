@@ -1,29 +1,35 @@
-﻿using Dapper;
+﻿using System.Text;
+using Dapper;
 using DreamChip.AnimalTracking.Application.Abstractions.Repositories;
+using DreamChip.AnimalTracking.DAL.Extensions;
+using DreamChip.AnimalTracking.DAL.RepositoryMetadata;
 using DreamChip.AnimalTracking.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 
 namespace DreamChip.AnimalTracking.DAL.Repositories;
 
-public sealed class LocationRepository : BaseRepository, ILocationRepository
+public sealed class LocationRepository : BaseRepository<Location, long>, ILocationRepository
 {
-    private readonly string[] _columns = { "id", "latitude", "longitude" };
-    
     public LocationRepository(IConfiguration configuration) : base(configuration)
     {
     }
-    
-    public async Task<Location?> GetByIdAsync(long id)
+
+    protected override string TableName { get; set; } = nameof(Location);
+    protected override string[] Columns { get; set; } = { "Id", "Latitude", "Longitude" };
+
+    public override async Task<Location?> GetByIdAsync(long id)
     {
-        var sql = $@"SELECT {GetLocationColumns("l")},
-                            {GetAnimalVisitedLocationColumns("avl")}
-                     FROM public.location l
-                     LEFT JOIN public.animal_visited_location avl ON avl.location_id = l.id
-                     WHERE l.id = @id";
+        var sql = new StringBuilder()
+            .Select(TableName, Columns)
+            .AddColumns(AnimalVisitedLocationTableMetadata.TableName, AnimalVisitedLocationTableMetadata.Columns)
+            .From(TableName)
+            .LeftJoin(TableName, AnimalVisitedLocationTableMetadata.TableName, "Id", "LocationId")
+            .Where($"\"{TableName}\".\"Id\" = @Id")
+            .ToString();
 
         var connection = await OpenConnection();
 
-        return (await connection.QueryAsync<Location?, AnimalVisitedLocation?, Location?>(
+        var location = (await connection.QueryAsync<Location?, AnimalVisitedLocation?, Location?>(
                 sql,
                 (location, animalVisitedLocation) =>
                 {
@@ -37,81 +43,29 @@ public sealed class LocationRepository : BaseRepository, ILocationRepository
                 new { id }))
             .AsQueryable()
             .FirstOrDefault();
-    }
-
-    public async Task<Location?> GetByCoordinatesAsync(double latitude, double longitude)
-    {
-        var sql = $@"SELECT {string.Join(',', _columns)}
-                     FROM public.location
-                     WHERE latitude = @latitude AND longitude = @longitude";
-
-        var connection = await OpenConnection();
-
-        return await connection.QueryFirstOrDefaultAsync<Location>(sql, new
-        {
-            latitude = latitude,
-            longitude = longitude
-        });
-    }
-
-    public async Task<long> CreateAsync(Location location)
-    {
-        var sql = @"INSERT INTO public.location (latitude, longitude)
-                    VALUES (@Latitude, @Longitude)
-                    RETURNING id";
-
-        var connection = await OpenConnection();
-
-        var id = await connection.ExecuteScalarAsync<long>(sql, location);
-
-        return id;
-    }
-
-    public async Task<Location> UpdateAsync(Location location)
-    {
-        var sql = @"UPDATE public.location
-                    SET latitude = @latitude, longitude = @longitude
-                    WHERE id = @id";
-
-        var connection = await OpenConnection();
-
-        await connection.ExecuteAsync(sql, new
-        {
-            id = location.Id,
-            latitude = location.Latitude,
-            longitude = location.Longitude
-        });
+        
+        connection.Close();
 
         return location;
     }
 
-    public async Task DeleteAsync(long id)
+    public async Task<Location?> GetByCoordinatesAsync(double latitude, double longitude)
     {
-        var sql = @"DELETE FROM public.location
-                    WHERE id = @id";
+        var sql = new StringBuilder()
+            .Select(TableName, Columns)
+            .From(TableName)
+            .Where(new[] { $"\"{TableName}\".\"Latitude\" = @Latitude", $"\"{TableName}\".\"Longitude\" = @Longitude" })
+            .ToString();
 
         var connection = await OpenConnection();
-        await connection.ExecuteAsync(sql, new { id });
-    }
 
-    private string GetAnimalVisitedLocationColumns(string? tableName = null)
-    {
-        var alias = tableName is not null ? $"{tableName}." : null; 
+        var location = await connection.QueryFirstOrDefaultAsync<Location>(sql, new
+        {
+            latitude, longitude
+        });
         
-        return $"{alias}id, {alias}location_id, {alias}animal_id";
-    }
+        connection.Close();
 
-    private string GetLocationColumns(string? tableName = null)
-    {
-        var alias = tableName is not null ? $"{tableName}." : null;
-
-        return $"{alias}id, {alias}latitude, {alias}longitude";
-    }
-
-    private string GetAnimalColumns(string? tableName = null)
-    {
-        var alias = tableName is not null ? $"{tableName}." : null;
-
-        return $"{alias}id";
+        return location;
     }
 }

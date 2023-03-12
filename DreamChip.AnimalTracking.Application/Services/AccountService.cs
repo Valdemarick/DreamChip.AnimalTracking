@@ -52,7 +52,7 @@ public sealed class AccountService
         if (existingAccount != null)
         {
             var exception = new AccountWithTheSameEmailExistsException();
-
+        
             return new Result<AccountDto>(exception);
         }
 
@@ -81,6 +81,8 @@ public sealed class AccountService
         }
 
         account = _mapper.Map<Account>(dto);
+        account.Id = id;
+        
         await _accountRepository.UpdateAsync(account);
 
         var accountDto = _mapper.Map<AccountDto>(account);

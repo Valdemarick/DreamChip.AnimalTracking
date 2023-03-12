@@ -2,17 +2,17 @@
 
 public sealed class AnimalPageRequestDto
 {
-    public DateTime StartDateTime { get; set; }
+    public DateTime? StartDateTime { get; set; }
 
-    public DateTime EndDateTime { get; set; }
+    public DateTime? EndDateTime { get; set; }
     
-    public string Gender { get; set; } = null!;
+    public string? Gender { get; set; } = null!;
     
-    public string LifeStatus { get; set; } = null!;
+    public string? LifeStatus { get; set; } = null!;
 
-    public int ChipperId { get; set; }
+    public int? ChipperId { get; set; }
     
-    public long ChippingLocationId { get; set; }
+    public long? ChippingLocationId { get; set; }
 
     public int From { get; set; } = 0;
 

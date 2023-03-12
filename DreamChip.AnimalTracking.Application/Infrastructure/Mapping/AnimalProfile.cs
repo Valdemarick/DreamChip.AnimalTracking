@@ -20,13 +20,11 @@ public class AnimalProfile : Profile
                     x => x.AnimalVisitedLocations.Select(avl => avl.Id)))
             .ForMember(dest => dest.ChippingDateTime,
                 src => src.MapFrom(
-                    x => x.ChippingLocation.ChippingDateTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz",
-                        CultureInfo.InvariantCulture)))
+                    x => x.ChippingLocation.ChippingDateTime.ToString("u")))
             .ForMember(dest => dest.DeathDateTime,
                 src => src.MapFrom(
                     x => x.DeathDatetime.HasValue
-                        ? x.DeathDatetime.Value.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz",
-                            CultureInfo.InvariantCulture)
+                        ? x.DeathDatetime.Value.ToString()
                         : null))
             .ForMember(dest => dest.ChippingLocationId,
                 src => src.MapFrom(
@@ -35,16 +33,17 @@ public class AnimalProfile : Profile
         CreateMap<AnimalPageRequestDto, AnimalPageRequest>();
 
         CreateMap<CreateAnimalDto, Animal>()
-            .ForMember(dest => dest.LifeStatus, 
-                opt => 
+            .ForMember(dest => dest.LifeStatus,
+                opt =>
                     opt.MapFrom(x => LifeStatus.Alive))
-            // .ForMember(dest => dest.ChippingLocation, 
-            //     opt => opt.MapFrom(
-            //         x => new ChippingLocation{LocationId = x.ChippingLocationId }));
-            // .ForMember(dest => dest.Id,
-            //     opt => opt.Ignore())
-            .ForMember(dest => dest.AnimalTypes, 
-                opt => opt.Ignore());
-        
+            .ForMember(dest => dest.ChippingLocation,
+                opt => opt.MapFrom(
+                    x => new AnimalChippingLocation { LocationId = x.ChippingLocationId }))
+            .ForMember(dest => dest.Id,
+                opt => opt.Ignore())
+            .ForMember(dest => dest.AnimalTypes,
+                opt => opt.MapFrom(src => src.AnimalTypes.Select(
+                    x => new AnimalType(x))));
+
     }
 }

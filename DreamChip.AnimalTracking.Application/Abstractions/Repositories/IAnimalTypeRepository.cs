@@ -2,12 +2,8 @@
 
 namespace DreamChip.AnimalTracking.Application.Abstractions.Repositories;
 
-public interface IAnimalTypeRepository
+public interface IAnimalTypeRepository : IBaseRepository<AnimalType, long>
 {
-    Task<AnimalType?> GetByIdAsync(long id);
     Task<List<AnimalType>> GetByIdsAsync(List<long> ids);
     Task<AnimalType?> GetByName(string type);
-    Task<long> CreateAsync(AnimalType animalType);
-    Task UpdateAsync(AnimalType animalType);
-    Task DeleteAsync(long id);
 }
