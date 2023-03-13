@@ -26,7 +26,8 @@ public static class DependencyInjection
         services.AddTransient<IAccountRepository, AccountRepository>()
             .AddTransient<ILocationRepository, LocationRepository>()
             .AddTransient<IAnimalTypeRepository, AnimalTypeRepository>()
-            .AddTransient<IAnimalRepository, AnimalRepository>();
+            .AddTransient<IAnimalRepository, AnimalRepository>()
+            .AddTransient<IAnimalVisitedLocationRepository, AnimalVisitedLocationRepository>();
         
         DapperExtensions.DapperAsyncExtensions.SetMappingAssemblies(new List<Assembly>()
         {

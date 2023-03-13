@@ -11,5 +11,6 @@ public sealed class AnimalVisitedLocationMapper : ClassMapper<AnimalVisitedLocat
         Map(x => x.Id).Column("Id");
         Map(x => x.AnimalId).Column("AnimalId");
         Map(x => x.LocationId).Column("LocationId");
+        Map(x => x.DateTimeOfVisitLocationPoint).Column("DateTimeOfVisitLocation");
     }    
 }

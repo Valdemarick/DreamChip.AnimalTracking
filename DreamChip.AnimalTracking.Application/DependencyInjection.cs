@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using DreamChip.AnimalTracking.Application.Abstractions.Services;
+using DreamChip.AnimalTracking.Domain.Entities;
 using FluentValidation;
 
 namespace DreamChip.AnimalTracking.Application;
@@ -20,7 +21,8 @@ public static class DependencyInjection
         services.AddTransient<AccountService>()
             .AddTransient<LocationService>()
             .AddTransient<IAnimalTypeService, AnimalTypeService>()
-            .AddTransient<IAnimalService, AnimalService>();
+            .AddTransient<IAnimalService, AnimalService>()
+            .AddTransient<IAnimalVisitedLocationService, AnimalVisitedLocationService>();
 
         return services;
     }

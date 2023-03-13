@@ -24,5 +24,11 @@ public sealed class AnimalPageRequestDtoValidator : AbstractValidator<AnimalPage
 
         RuleFor(x => x.LifeStatus)
             .Must(AnimalValidatorExtensions.IsLifeStatusValid).When(x => x.LifeStatus is not null);
+
+        RuleFor(x => x.StartDateTime)
+            .Must(AnimalValidatorExtensions.IsDateTimeValidFormat).When(x => x.StartDateTime is not null);
+
+        RuleFor(x => x.EndDateTime)
+            .Must(AnimalValidatorExtensions.IsDateTimeValidFormat).When(x => x.EndDateTime is not null);
     }
 }
