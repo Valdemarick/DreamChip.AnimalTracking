@@ -204,7 +204,7 @@ internal static class SqlStatementExtensions
     }
 
     /// <summary>
-    /// Represents UPDATE statement.
+    /// Represents UPDATE statement. Change values of multiple columns.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="tableName">Updated table name.</param>
@@ -215,6 +215,21 @@ internal static class SqlStatementExtensions
         builder.Append($"UPDATE \"{tableName}\" SET {string.Join(',', columns.Select(x => $"\"{x}\" =" + $"@{x}"))}")
             .Append('\n');
         
+        return builder;
+    }
+
+    /// <summary>
+    /// Represents UPDATE statement. Change values of exactly one column.
+    /// </summary>
+    /// <param name="builder">StringBuilder.</param>
+    /// <param name="tableName">Table name.</param>
+    /// <param name="columnName">Column name.</param>
+    /// <returns>StringBuilder with UPDATE statement.</returns>
+    internal static StringBuilder Update(this StringBuilder builder, string tableName, string columnName)
+    {
+        builder.Append($"UPDATE \"{tableName}\" SET \"{columnName}\" = @{columnName}")
+            .Append('\n');
+
         return builder;
     }
 

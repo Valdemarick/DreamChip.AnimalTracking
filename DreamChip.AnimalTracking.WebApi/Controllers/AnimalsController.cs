@@ -61,6 +61,20 @@ public sealed class AnimalsController : BaseController
         return GetResponseFromResult(result, HttpStatusCode.Created);
     }
 
+    [HttpPut("{animalId:long}/types")]
+    [ServiceFilter(typeof(AuthorizationFilter))]
+    public async Task<IActionResult> UpdateAnimalTypeAsync([FromRoute] long animalId, [FromBody] UpdateAnimalTypeInAnimalDto dto)
+    {
+        if (animalId <= 0)
+        {
+            return BadRequest();
+        }
+
+        var result = await _animalService.UpdateAnimalTypeInAnimalAsync(animalId, dto);
+
+        return GetResponseFromResult(result, HttpStatusCode.OK);
+    }
+
     [HttpDelete("{id:long}")]
     [ServiceFilter(typeof(AuthorizationFilter))]
     public async Task<IActionResult> DeleteAsync([FromRoute] long id)

@@ -8,6 +8,7 @@ using DreamChip.AnimalTracking.Domain.Exceptions.Animal;
 using DreamChip.AnimalTracking.Domain.Exceptions.AnimalType;
 using DreamChip.AnimalTracking.Domain.Exceptions.Location;
 using DreamChip.AnimalTracking.Domain.ValueObjects.Animal;
+using LanguageExt;
 using LanguageExt.Common;
 
 namespace DreamChip.AnimalTracking.Application.Services;
@@ -126,6 +127,47 @@ public sealed class AnimalService : IAnimalService
         var animalDto = _mapper.Map<AnimalDto>(animal);
 
         return animalDto;
+    }
+
+    public async Task<Result<AnimalDto>> UpdateAnimalTypeInAnimalAsync(long animalId, UpdateAnimalTypeInAnimalDto dto)
+    {
+        var animal = await _animalRepository.GetByIdAsync(animalId);
+        if (animal is null)
+        {
+            var exception = new AnimalNotFoundException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        if (!animal.AnimalTypes.Any(x => x.Id == dto.OldAnimalTypeId))
+        {
+            var exception = new AnimalDoesNotHaveThisTypeException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        if (animal.AnimalTypes.Any(x => x.Id == dto.NewAnimalTypeId))
+        {
+            var exception = new AnimalAlreadyHasThisTypeException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        if (animal.AnimalTypes.Any(x => x.Id == dto.NewAnimalTypeId) &&
+            animal.AnimalTypes.Any(x => x.Id == dto.OldAnimalTypeId))
+        {
+            var exception = new AnimalAlreadyHasTheseTypesException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        await _animalRepository.UpdateAnimalTypeInAnimalAsync(animalId, dto.OldAnimalTypeId, dto.NewAnimalTypeId);
+
+        var updatedAnimal = await _animalRepository.GetByIdAsync(animalId);
+
+        var animalDto = _mapper.Map<AnimalDto>(updatedAnimal);
+
+        return new Result<AnimalDto>(animalDto);
     }
 
     public async Task<Result<AnimalDto>> DeleteAsync(long id)

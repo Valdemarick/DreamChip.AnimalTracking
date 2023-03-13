@@ -188,6 +188,23 @@ public sealed class AnimalRepository : BaseRepository<Animal, long>, IAnimalRepo
         connection.Close();
     }
 
+    public async Task UpdateAnimalTypeInAnimalAsync(long animalId, long oldAnimalTypeId, long newAnimalTypeId)
+    {
+        var sql = new StringBuilder()
+            .Update(AnimalTypeAnimalTableMetadata.TableName, "AnimalTypeId")
+            .Where(new[] { "\"AnimalId\" = @AnimalId", "\"AnimalTypeId\" = @OldAnimalTypeId" })
+            .ToString();
+
+        var connection = await OpenConnection();
+
+        await connection.ExecuteAsync(sql, new
+        {
+            animalId = animalId,
+            animalTypeId = newAnimalTypeId,
+            oldAnimalTypeId = oldAnimalTypeId
+        });
+    }
+
     public override async Task<long> CreateAsync(Animal animal)
     {
         var firstInsertStatement = new StringBuilder()

@@ -13,5 +13,7 @@ public interface IAnimalService
 
     Task<Result<AnimalDto>> AddTypeAsync(long animalId, long typeId);
 
+    Task<Result<AnimalDto>> UpdateAnimalTypeInAnimalAsync(long animalId, UpdateAnimalTypeInAnimalDto dto);
+
     Task<Result<AnimalDto>> DeleteAsync(long id);
 }

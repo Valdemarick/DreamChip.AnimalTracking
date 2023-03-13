@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using DreamChip.AnimalTracking.Application.Dto.Animal;
 using DreamChip.AnimalTracking.Domain.Exceptions.Account;
 using DreamChip.AnimalTracking.Domain.Exceptions.Animal;
 using DreamChip.AnimalTracking.Domain.Exceptions.AnimalType;
@@ -11,8 +12,6 @@ namespace DreamChip.AnimalTracking.WebApi.Controllers;
 [ApiController]
 public abstract class BaseController : ControllerBase
 {
-    protected delegate IActionResult OkRes<in TValue>(TValue val);
-    
     private static readonly List<Type> BadRequestExceptionTypes = new List<Type>
     {
         typeof(AccountLinkedWithAnimalsException),
@@ -27,12 +26,16 @@ public abstract class BaseController : ControllerBase
         typeof(LocationNotFoundException),
         typeof(AnimalTypeNotFoundException),
         typeof(AnimalNotFoundException),
+        typeof(AnimalDoesNotHaveThisTypeException),
     };
     
     private static readonly List<Type> ConflictExceptionTypes = new List<Type>
     {
         typeof(AccountWithTheSameEmailExistsException),
         typeof(LocationWithSuchCoordinatesAlreadyExistsException),
+        typeof(AnimalAlreadyHasThisTypeException),
+        typeof(AnimalAlreadyHasTheseTypesException),
+        typeof(AnimalTypeWithSuchNameAlreadyExistsException),
     };
 
     [NonAction]
@@ -40,6 +43,11 @@ public abstract class BaseController : ControllerBase
     {
         return result.Match<IActionResult>(value =>
         {
+            if (value is null)
+            {
+                
+            }
+            
             return new ObjectResult(value)
             {
                 StatusCode = (int)statusCode
