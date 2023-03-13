@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>591d112e-67b9-42d4-9b3e-e877899b96c4</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.1.1-dev-00295" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DreamChip.AnimalTracking.Application\DreamChip.AnimalTracking.Application.csproj" />
+    <ProjectReference Include="..\DreamChip.AnimalTracking.DAL\DreamChip.AnimalTracking.DAL.csproj" />
+  </ItemGroup>
+
+</Project>

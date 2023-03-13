@@ -12,9 +12,51 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8E94986F-BAE7-45D5-A4A9-BD8F2337CA9D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DreamChip.AnimalTracking.Domain", "DreamChip.AnimalTracking.Domain\DreamChip.AnimalTracking.Domain.csproj", "{7AF1A613-E636-45DE-A625-17BE8EB4FB17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DreamChip.AnimalTracking.DAL", "DreamChip.AnimalTracking.DAL\DreamChip.AnimalTracking.DAL.csproj", "{91C29216-D20B-4EE8-BDE2-BEF90B85C0BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DreamChip.AnimalTracking.WebApi", "DreamChip.AnimalTracking.WebApi\DreamChip.AnimalTracking.WebApi.csproj", "{828FDA8D-DB7A-4497-B7B4-C6F29B68DED5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DreamChip.AnimalTracking.Application", "DreamChip.AnimalTracking.Application\DreamChip.AnimalTracking.Application.csproj", "{4A821039-AEB6-4EE9-9231-2F9D5D398B57}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6D7A4768-0DE4-49A5-91CA-E3BEA7F2DBED}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7AF1A613-E636-45DE-A625-17BE8EB4FB17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AF1A613-E636-45DE-A625-17BE8EB4FB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AF1A613-E636-45DE-A625-17BE8EB4FB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AF1A613-E636-45DE-A625-17BE8EB4FB17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91C29216-D20B-4EE8-BDE2-BEF90B85C0BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91C29216-D20B-4EE8-BDE2-BEF90B85C0BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91C29216-D20B-4EE8-BDE2-BEF90B85C0BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91C29216-D20B-4EE8-BDE2-BEF90B85C0BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{828FDA8D-DB7A-4497-B7B4-C6F29B68DED5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{828FDA8D-DB7A-4497-B7B4-C6F29B68DED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{828FDA8D-DB7A-4497-B7B4-C6F29B68DED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{828FDA8D-DB7A-4497-B7B4-C6F29B68DED5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A821039-AEB6-4EE9-9231-2F9D5D398B57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A821039-AEB6-4EE9-9231-2F9D5D398B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A821039-AEB6-4EE9-9231-2F9D5D398B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A821039-AEB6-4EE9-9231-2F9D5D398B57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D7A4768-0DE4-49A5-91CA-E3BEA7F2DBED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D7A4768-0DE4-49A5-91CA-E3BEA7F2DBED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D7A4768-0DE4-49A5-91CA-E3BEA7F2DBED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D7A4768-0DE4-49A5-91CA-E3BEA7F2DBED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7AF1A613-E636-45DE-A625-17BE8EB4FB17} = {8E94986F-BAE7-45D5-A4A9-BD8F2337CA9D}
+		{91C29216-D20B-4EE8-BDE2-BEF90B85C0BB} = {8E94986F-BAE7-45D5-A4A9-BD8F2337CA9D}
+		{828FDA8D-DB7A-4497-B7B4-C6F29B68DED5} = {8E94986F-BAE7-45D5-A4A9-BD8F2337CA9D}
+		{4A821039-AEB6-4EE9-9231-2F9D5D398B57} = {8E94986F-BAE7-45D5-A4A9-BD8F2337CA9D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3AFBEAA1-627A-43FD-BA30-ED7B8F53C884}

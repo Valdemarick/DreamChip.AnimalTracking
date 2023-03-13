@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  dreamchip.animaltracking.webapi:
+    container_name: dreamchip.animaltracking.webapi
+    image: ${DOCKER_REGISTRY-}dreamchipanimaltrackingwebapi
+    build:
+      context: .
+      dockerfile: DreamChip.AnimalTracking.WebApi/Dockerfile
+    depends_on:
+     - db
+
+  db: 
+    container_name: db
+    image: postgres:15.2
+
+  tests:
+    container_name: tests
+    image: mrexpen/planet_olymp_phase1
+    depends_on:
+    - dreamchip.animaltracking.webapi
