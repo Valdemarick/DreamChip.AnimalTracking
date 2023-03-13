@@ -8,4 +8,5 @@ public interface IAnimalRepository : IBaseRepository<Animal, long>
     Task<List<Animal>> GetPageAsync(AnimalPageRequest request);
     Task AddTypeAsync(long animalId, long typeId);
     Task UpdateAnimalTypeInAnimalAsync(long animalId, long oldAnimalTypeId, long newAnimalTypeId);
+    Task DeleteAnimalTypeFromAnimalAsync(long animalId, long animalTypeId);
 }

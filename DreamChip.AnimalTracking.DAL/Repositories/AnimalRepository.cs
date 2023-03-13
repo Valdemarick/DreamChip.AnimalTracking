@@ -203,6 +203,25 @@ public sealed class AnimalRepository : BaseRepository<Animal, long>, IAnimalRepo
             animalTypeId = newAnimalTypeId,
             oldAnimalTypeId = oldAnimalTypeId
         });
+        
+        connection.Close();
+    }
+
+    public async Task DeleteAnimalTypeFromAnimalAsync(long animalId, long animalTypeId)
+    {
+        var sql = new StringBuilder()
+            .Delete(AnimalTypeAnimalTableMetadata.TableName)
+            .Where(new[] { "\"AnimalId\" = @AnimalId", "\"AnimalTypeId\" = @AnimalTypeId" })
+            .ToString();
+
+        var connection = await OpenConnection();
+
+        await connection.ExecuteAsync(sql, new
+        {
+            animalId, animalTypeId
+        });
+        
+        connection.Close();
     }
 
     public override async Task<long> CreateAsync(Animal animal)

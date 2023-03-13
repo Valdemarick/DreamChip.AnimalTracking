@@ -191,4 +191,45 @@ public sealed class AnimalService : IAnimalService
 
         return new Result<AnimalDto>(new AnimalDto());
     }
+
+    public async Task<Result<AnimalDto>> DeleteAnimalTypeFromAnimalAsync(long animalId, long animalTypeId)
+    {
+        var animal = await _animalRepository.GetByIdAsync(animalId);
+        if (animal is null)
+        {
+            var exception = new AnimalNotFoundException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        if (animal.AnimalTypes.Count == 1 && animal.AnimalTypes.First().Id == animalTypeId)
+        {
+            var exception = new AnimalHasOnlyThisTypeException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        var animalType = await _animalTypeRepository.GetByIdAsync(animalTypeId);
+        if (animalType is null)
+        {
+            var exception = new AnimalTypeNotFoundException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        if (!animal.AnimalTypes.Any(x => x.Id == animalTypeId))
+        {
+            var exception = new AnimalDoesNotHaveThisTypeException();
+
+            return new Result<AnimalDto>(exception);
+        }
+
+        await _animalRepository.DeleteAnimalTypeFromAnimalAsync(animalId, animalTypeId);
+
+        var updatedAnimal = await _animalRepository.GetByIdAsync(animalId);
+
+        var animalDto = _mapper.Map<AnimalDto>(updatedAnimal);
+
+        return new Result<AnimalDto>(animalDto);
+    }
 }

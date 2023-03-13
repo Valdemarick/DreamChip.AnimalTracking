@@ -17,7 +17,8 @@ public abstract class BaseController : ControllerBase
         typeof(AccountLinkedWithAnimalsException),
         typeof(LocationLinkedWithAnimalException),
         typeof(AnimalTypeLinkedWithAnimalException),
-        typeof(AnimalCreationFailedException)
+        typeof(AnimalCreationFailedException),
+        typeof(AnimalHasOnlyThisTypeException),
     };
 
     private static readonly List<Type> NotFoundExceptionTypes = new List<Type>

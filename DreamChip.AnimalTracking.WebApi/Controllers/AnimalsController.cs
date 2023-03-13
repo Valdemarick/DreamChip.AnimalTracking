@@ -88,4 +88,18 @@ public sealed class AnimalsController : BaseController
 
         return GetResponseFromResult(result, HttpStatusCode.OK);
     }
+
+    [HttpDelete("{animalId:long}/types/{animalTypeId:long}")]
+    public async Task<IActionResult> DeleteAnimalTypeFromAnimalAsync([FromRoute] long animalId,
+        [FromRoute] long animalTypeId)
+    {
+        if (animalId <= 0 || animalTypeId <= 0)
+        {
+            return BadRequest();
+        }
+
+        var result = await _animalService.DeleteAnimalTypeFromAnimalAsync(animalId, animalTypeId);
+
+        return GetResponseFromResult(result, HttpStatusCode.OK);
+    }
 }
